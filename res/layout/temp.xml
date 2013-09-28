@@ -1,47 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="100dp"
+    android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#dd2211" 
-        android:layout_weight="0.15">
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/button1"
-            android:layout_alignParentRight="true"
-            android:text="Button" />
-        
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="#ffcc11" >
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        			android:layout_weight="0.2"
+         >
          
-         <ListView android:id="@android:id/list"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
-        <TextView android:id="@android:id/empty"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Empty"/>
-           
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/fileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Filename"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/fileModified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="19dp"
+            android:text="Modified"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/fileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/fileName"
+            android:layout_alignBottom="@+id/fileName"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:text="Size"
+            android:textSize="15dp" />
+
     </RelativeLayout>
 
 </LinearLayout>

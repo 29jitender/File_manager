@@ -2,6 +2,7 @@ package com.example.filemanager;
 
  
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -18,36 +19,43 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.itextpdf.text.pdf.PRStream;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfObject;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStream;
+
 
 public class MainActivity  
         extends ListActivity     
         implements AdapterView.OnItemClickListener
  {
-    ListView lv;         
-    String dirPath;      
-    File[] fileList; //array of items
-    
+    ListView listview;         
+    String dir_Path;      
+    File[] file_list; //array of items
+    PdfReader reader;
+
      @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
          setContentView(R.layout.activity_main);
 
 
-        lv = getListView();     
-        dirPath = "/";     //initial path
+        listview = getListView();     
+        dir_Path = "/";     //initial path
         try {                   
-            dirPath = getIntent().getExtras().getString("path");//get the path from intent
+            dir_Path = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
 
-         FileAdapter A = null;
+         FileAdapter Adapter = null;
          
          
 		try { //this try catch block is to check the exception if we dont have root permission
-			A = new FileAdapter(this, 1, new ArrayList<FileObject>());
-			   fileList = (new File(dirPath)).listFiles();
-			 for (int i = 0; i < fileList.length; i++) //itrating over the length of file list
-			    A.add(new FileObject(fileList[i])); //adding item to fileobjec
-			 A.sort();
+			Adapter = new FileAdapter(this, 1, new ArrayList<FileObject>());
+			   file_list = (new File(dir_Path)).listFiles();
+			 for (int i = 0; i < file_list.length; i++) //itrating over the length of file list
+			    Adapter.add(new FileObject(file_list[i])); //adding item to fileobjec
+			 Adapter.sort();
 		} catch (Exception e) {
 			 new AlertDialog.Builder(this)//opening a dialog box wiht msg
              .setTitle("Need root permission to open this")
@@ -60,17 +68,17 @@ public class MainActivity
              .show();			e.printStackTrace();
 		}
 
-         lv.setAdapter(A);
-         lv.setOnItemClickListener(this);
+         listview.setAdapter(Adapter);
+         listview.setOnItemClickListener(this);
 
-         setTitle(dirPath);//setting title 
+         setTitle(dir_Path);//setting title 
     }
 
 
      @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
     {
-         String path = dirPath + "/" + ((TextView)view.findViewById(R.id.fileName)).getText().toString();
+         String path = dir_Path + "/" + ((TextView)view.findViewById(R.id.fileName)).getText().toString();
  
             File file1 = new File(path);
 
@@ -95,7 +103,35 @@ public class MainActivity
             String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
             String type = mime.getMimeTypeFromExtension(ext);  //
            if(ext.equals("pdf")){//for pdf
-        	   	Log.i("ext",ext);
+        	   	
+         	    try{
+        	        reader = new PdfReader(file.getAbsolutePath());
+
+        	        for (int k = 0; k < reader.getXrefSize(); k++) {
+        	            PdfObject pdfobj= reader.getPdfObject(k);
+        	            if (pdfobj == null || !pdfobj.isStream()) {
+        	        	   	Log.i("ext0",ext);
+
+        	                continue;
+        	            }
+                	   	Log.i("ext1",reader.getXrefSize()+"");
+
+        	            PdfStream stream = (PdfStream) pdfobj;
+        	            PdfObject pdfsubtype = stream.get(PdfName.SUBTYPE);
+
+        	            if (pdfsubtype != null && pdfsubtype.toString().equals(PdfName.IMAGE.toString())) {
+        	                byte[] img = PdfReader.getStreamBytesRaw((PRStream) stream);
+        	                FileOutputStream out = new FileOutputStream(new 
+        	                File(file.getParentFile(),String.format("%1$05d", k) + ".jpg"));
+        	                out.write(img); out.flush(); out.close(); 
+        	        	   	Log.i("ext2",ext);
+
+        	            }
+        	        }
+        	    } catch (Exception e) { }
+        	   	
+        	   	
+        	   	
            }
            else{// for rest
              intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
@@ -110,7 +146,7 @@ public class MainActivity
          if (keyCode == KeyEvent.KEYCODE_BACK)
          {
              finish();    
-             if(!dirPath.equals("/"))  //if its home / then no animation
+             if(!dir_Path.equals("/"))  //if its home / then no animation
                  overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
          }
          return super.onKeyDown(keyCode, event);

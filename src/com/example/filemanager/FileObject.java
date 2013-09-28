@@ -13,17 +13,18 @@ public class FileObject
     boolean isDir;
     String path, name ;
     long size;
-    Date modified;
+    Date last_modified;
+      File rec;
 
-     public FileObject(File f)
+     public FileObject(File recived_file)
     {
-         isDir = f.isDirectory();
-        path = f.getPath();
-        name = f.getName();
+         isDir = recived_file.isDirectory();
+        path = recived_file.getPath();
+        name = recived_file.getName();
         if(!isDir) //if not directy
-            size = f.length();
-        modified = new Date(f.lastModified());
-
+            size = recived_file.length();
+        last_modified = new Date(recived_file.lastModified());
+        rec=recived_file;
           
     }
 
@@ -31,12 +32,16 @@ public class FileObject
     {
         return name;
     }
-
+     public File getFile(){
+    	 
+		return rec;
+    	 
+     }
     public String getSize()
     {
         if(isDir)        
             return "";
-        return humanReadableByteCount(size, false);
+        return bytecount_format(size, false);
     }
 
     
@@ -44,12 +49,12 @@ public class FileObject
     public String getModified()
     {
          SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yy H:mm:ss");
-        return sdf.format(modified);
+        return sdf.format(last_modified);
     }
 
     
     @Override
-    public int compareTo(FileObject other)
+    public int compareTo(FileObject other)//compering dir and files if dir it should come on top otherwish sort files 
     {
         if(this.isDir!=other.isDir)
             return this.isDir?-1:1;
@@ -58,8 +63,8 @@ public class FileObject
     }
 
     
-    public static String humanReadableByteCount(long bytes, boolean si) { // getting size of file in redable format
-        int unit = si ? 1000 : 1024;
+    public static String bytecount_format(long bytes, boolean si) { // getting size of file in redable format
+        int unit = si ? 1000 : 1024;// 1024 bit to byte or for
         if (bytes < unit) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
