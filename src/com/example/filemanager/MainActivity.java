@@ -5,14 +5,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 import net.sf.andpdf.pdfviewer.PdfViewerActivity;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -44,7 +42,7 @@ public class MainActivity
 
 
         listview = getListView();     
-        dir_Path = "/storage";     //initial path
+        dir_Path = "/";     //initial path
         try {                   
             dir_Path = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
@@ -91,8 +89,7 @@ public class MainActivity
             
             next.putExtra("path", path);//putting path
             startActivity(next); //starting it again with new path and show that again 
-             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);// random stuff for transition :P
-        }
+         }
          else
         { // otherwise open the file using defult 
             Intent intent = new Intent();
@@ -120,17 +117,6 @@ public class MainActivity
         }
     }
 
-     @Override
-     public boolean onKeyDown(int keyCode, KeyEvent event)
-     {
-         if (keyCode == KeyEvent.KEYCODE_BACK)
-         {
-             finish();    
-             if(!dir_Path.equals("/"))  //if its home / then no animation
-                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-         }
-         return super.onKeyDown(keyCode, event);
-     }
  
  
 }

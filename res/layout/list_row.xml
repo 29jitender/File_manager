@@ -5,7 +5,8 @@
         android:layout_width="fill_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
+        android:paddingTop="10dp"
+                android:paddingBottom="10dp"
         
          >
 
@@ -32,6 +33,7 @@
             android:layout_weight="1" 
             android:text="Filename" 
             android:maxLines="1"
+            android:textColor="#ecf2f9"
             android:textSize="20dp"/>
 
         <TextView
@@ -42,6 +44,8 @@
             android:layout_below="@+id/fileName"
             android:gravity="center_vertical"
             android:text="Size"
+                        android:textColor="#ecf2f9"
+            
             android:textSize="15dp"  />
 
         <TextView
@@ -51,6 +55,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:text="Modified"
+                        android:textColor="#ecf2f9"
+            
             android:textSize="12dp" />
 
     </RelativeLayout>
