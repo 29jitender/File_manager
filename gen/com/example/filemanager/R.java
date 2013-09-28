@@ -29,31 +29,45 @@ public final class R {
         public static final int folder=0x7f020001;
         public static final int ic_launcher=0x7f020002;
         public static final int image=0x7f020003;
-        public static final int music=0x7f020004;
-        public static final int none=0x7f020005;
-        public static final int pdf=0x7f020006;
-        public static final int video=0x7f020007;
-        public static final int xml=0x7f020008;
+        public static final int left_arrow=0x7f020004;
+        public static final int music=0x7f020005;
+        public static final int none=0x7f020006;
+        public static final int pdf=0x7f020007;
+        public static final int right_arrow=0x7f020008;
+        public static final int video=0x7f020009;
+        public static final int xml=0x7f02000a;
+        public static final int zoom_in=0x7f02000b;
+        public static final int zoom_out=0x7f02000c;
     }
     public static final class id {
-        public static final int action_settings=0x7f090004;
-        public static final int fileModified=0x7f090003;
-        public static final int fileName=0x7f090001;
-        public static final int fileSize=0x7f090002;
-        public static final int icon=0x7f090000;
+        public static final int action_settings=0x7f090009;
+        public static final int btExit=0x7f090007;
+        public static final int btOK=0x7f090008;
+        public static final int etPassword=0x7f090006;
+        public static final int fileModified=0x7f090005;
+        public static final int fileName=0x7f090003;
+        public static final int fileSize=0x7f090004;
+        public static final int icon=0x7f090002;
+        public static final int pagenum_edit=0x7f090001;
+        public static final int username_view=0x7f090000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int list_row=0x7f030001;
-        public static final int temp=0x7f030002;
+        public static final int activity_view_pdf=0x7f030001;
+        public static final int dialog_pagenumber=0x7f030002;
+        public static final int list_row=0x7f030003;
+        public static final int pdf_file_password=0x7f030004;
+        public static final int temp=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f080000;
+        public static final int view_pdf=0x7f080001;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int hello_world=0x7f060002;
+        public static final int title_activity_view_pdf=0x7f060003;
     }
     public static final class style {
         /** 

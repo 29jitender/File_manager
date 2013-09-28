@@ -2,8 +2,9 @@ package com.example.filemanager;
 
  
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
+
+import net.sf.andpdf.pdfviewer.PdfViewerActivity;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -11,19 +12,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.itextpdf.text.pdf.PRStream;
-import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfObject;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStream;
 
 
 public class MainActivity  
@@ -33,8 +27,16 @@ public class MainActivity
     ListView listview;         
     String dir_Path;      
     File[] file_list; //array of items
-    PdfReader reader;
-
+     public int getPreviousPageImageResource() { return R.drawable.left_arrow; }
+    public int getNextPageImageResource() { return R.drawable.right_arrow; }
+    public int getZoomInImageResource() { return R.drawable.zoom_in; }
+    public int getZoomOutImageResource() { return R.drawable.zoom_out; }
+    public int getPdfPasswordLayoutResource() { return R.layout.pdf_file_password; }
+    public int getPdfPageNumberResource() { return R.layout.dialog_pagenumber; }
+    public int getPdfPasswordEditField() { return R.id.etPassword; }
+    public int getPdfPasswordOkButton() { return R.id.btOK; }
+    public int getPdfPasswordExitButton() { return R.id.btExit; }
+    public int getPdfPageNumberEditField() { return R.id.pagenum_edit; }
      @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
@@ -42,7 +44,7 @@ public class MainActivity
 
 
         listview = getListView();     
-        dir_Path = "/";     //initial path
+        dir_Path = "/storage";     //initial path
         try {                   
             dir_Path = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
@@ -103,35 +105,13 @@ public class MainActivity
             String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
             String type = mime.getMimeTypeFromExtension(ext);  //
            if(ext.equals("pdf")){//for pdf
-        	   	
-         	    try{
-        	        reader = new PdfReader(file.getAbsolutePath());
-
-        	        for (int k = 0; k < reader.getXrefSize(); k++) {
-        	            PdfObject pdfobj= reader.getPdfObject(k);
-        	            if (pdfobj == null || !pdfobj.isStream()) {
-        	        	   	Log.i("ext0",ext);
-
-        	                continue;
-        	            }
-                	   	Log.i("ext1",reader.getXrefSize()+"");
-
-        	            PdfStream stream = (PdfStream) pdfobj;
-        	            PdfObject pdfsubtype = stream.get(PdfName.SUBTYPE);
-
-        	            if (pdfsubtype != null && pdfsubtype.toString().equals(PdfName.IMAGE.toString())) {
-        	                byte[] img = PdfReader.getStreamBytesRaw((PRStream) stream);
-        	                FileOutputStream out = new FileOutputStream(new 
-        	                File(file.getParentFile(),String.format("%1$05d", k) + ".jpg"));
-        	                out.write(img); out.flush(); out.close(); 
-        	        	   	Log.i("ext2",ext);
-
-        	            }
-        	        }
-        	    } catch (Exception e) { }
-        	   	
-        	   	
-        	   	
+		    	 
+       		  
+                  Intent intent212 = new Intent(this, View_pdf.class);//using Android-Pdf-Viewer-Library
+      	        intent212.putExtra(PdfViewerActivity.EXTRA_PDFFILENAME, file1.getAbsolutePath());//sending path 
+      	        
+      	        startActivity(intent212);
+ 
            }
            else{// for rest
              intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
