@@ -20,8 +20,8 @@ public class FileObject
          isDir = f.isDirectory();
         path = f.getPath();
         name = f.getName();
-        if(!isDir) //if not dir
-            size = f.length();//get the size of file
+        if(!isDir) //if not directy
+            size = f.length();
         modified = new Date(f.lastModified());
 
           
@@ -36,7 +36,7 @@ public class FileObject
     {
         if(isDir)        
             return "";
-        return "have to do this";
+        return humanReadableByteCount(size, false);
     }
 
     
@@ -49,7 +49,7 @@ public class FileObject
 
     
     @Override
-    public int compareTo(FileObject other) // if its not a dir put all dir on the top else all files in sorted order
+    public int compareTo(FileObject other)
     {
         if(this.isDir!=other.isDir)
             return this.isDir?-1:1;
@@ -57,6 +57,13 @@ public class FileObject
             return name.compareTo(other.name);
     }
 
-   
+    
+    public static String humanReadableByteCount(long bytes, boolean si) { // getting size of file in redable format
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
 
 }

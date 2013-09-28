@@ -4,9 +4,10 @@ package com.example.filemanager;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -24,28 +25,44 @@ public class MainActivity
     ListView lv;         
     String dirPath;      
     File[] fileList; //array of items
-
+    
      @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
-        setTheme(android.R.style.Theme_Light);       
+         setContentView(R.layout.activity_main);
+
 
         lv = getListView();     
-        dirPath = "/";     
+        dirPath = "/";     //initial path
         try {                   
             dirPath = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
 
-         FileAdapter A = new FileAdapter(this, 1, new ArrayList<FileObject>());
-           fileList = (new File(dirPath)).listFiles();
-         for (int i = 0; i < fileList.length; i++) //itrating over the length of file list
-            A.add(new FileObject(fileList[i])); //adding item to fileobjec
-         A.sort();
+         FileAdapter A = null;
+         
+         
+		try { //this try catch block is to check the exception if we dont have root permission
+			A = new FileAdapter(this, 1, new ArrayList<FileObject>());
+			   fileList = (new File(dirPath)).listFiles();
+			 for (int i = 0; i < fileList.length; i++) //itrating over the length of file list
+			    A.add(new FileObject(fileList[i])); //adding item to fileobjec
+			 A.sort();
+		} catch (Exception e) {
+			 new AlertDialog.Builder(this)//opening a dialog box wiht msg
+             .setTitle("Need root permission to open this")
+             .setNeutralButton("OK", new DialogInterface.OnClickListener(){
+                 public void onClick(DialogInterface dialog, int button){
+                     onBackPressed();// on press ok come back to home
+
+                 	}
+             })
+             .show();			e.printStackTrace();
+		}
 
          lv.setAdapter(A);
          lv.setOnItemClickListener(this);
 
-         setTitle(dirPath.substring(dirPath.lastIndexOf("/")));//setting title 
+         setTitle(dirPath);//setting title 
     }
 
 
@@ -81,5 +98,18 @@ public class MainActivity
             startActivity(intent);
         }
     }
+
+     @Override
+     public boolean onKeyDown(int keyCode, KeyEvent event)
+     {
+         if (keyCode == KeyEvent.KEYCODE_BACK)
+         {
+             finish();    
+             if(!dirPath.equals("/"))  //if its home / then no animation
+                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+         }
+         return super.onKeyDown(keyCode, event);
+     }
+ 
  
 }
