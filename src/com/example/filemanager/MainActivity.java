@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -93,9 +94,13 @@ public class MainActivity
             MimeTypeMap mime = MimeTypeMap.getSingleton();// this is used to open files
             String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
             String type = mime.getMimeTypeFromExtension(ext);  //
-
+           if(ext.equals("pdf")){//for pdf
+        	   	Log.i("ext",ext);
+           }
+           else{// for rest
              intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
             startActivity(intent);
+           }
         }
     }
 
