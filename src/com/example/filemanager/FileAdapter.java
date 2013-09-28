@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +44,13 @@ public class FileAdapter
          final FileObject file = entries.get(position);
          	Resources res = v.getResources();
 			 
+            ((ImageView)v.findViewById(R.id.icon)).setImageDrawable(getImageForExtension(file.getFile(), res));
 
         ((TextView)v.findViewById(R.id.fileName)).setText(file.getName());
+
         ((TextView)v.findViewById(R.id.fileSize)).setText(file.getSize()); //getting size
+
         ((TextView)v.findViewById(R.id.fileModified)).setText(file.getModified()); // last modified
-        ((ImageView)v.findViewById(R.id.icon)).setImageDrawable(getImageForExtension(file.getFile(), res));
   
 
 		 
@@ -81,24 +82,24 @@ public class FileAdapter
 
  			if (!extension.equals("")) {
  				if (extension.equals(".mp3") || extension.equals(".amr")) {
- 					d = res.getDrawable(R.drawable.musique);
+ 					d = res.getDrawable(R.drawable.music);
  				} else if (extension.equals(".mp4") || extension.equals(".avi")
  						|| extension.equals(".mpg")) {
- 					d = res.getDrawable(R.drawable.movie);
+ 					d = res.getDrawable(R.drawable.video);
  				} else if (extension.equals(".pdf")) {
  					d = res.getDrawable(R.drawable.pdf);
  				} else if (extension.equals(".jpg")
  						|| extension.equals(".jpeg")) {
- 					d = res.getDrawable(R.drawable.jpg);
+ 					d = res.getDrawable(R.drawable.image);
  				} else if (extension.equals(".xml")) {
  					d = res.getDrawable(R.drawable.xml);
  				} else if (extension.equals(".apk")) {
  					d = res.getDrawable(R.drawable.android);
  				} else {
- 					d = res.getDrawable(R.drawable.fichier);
+ 					d = res.getDrawable(R.drawable.none);
  				}
  			} else {
- 				d = res.getDrawable(R.drawable.fichier);
+ 				d = res.getDrawable(R.drawable.none);
  			}
 
  		}
