@@ -32,6 +32,7 @@
             android:layout_height="wrap_content" 
             android:layout_weight="1" 
             android:text="Filename" 
+            android:layout_marginRight="5dp"
             android:maxLines="1"
             android:textColor="#ecf2f9"
             android:textSize="20dp"/>
