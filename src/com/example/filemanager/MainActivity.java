@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -155,17 +156,50 @@ public class MainActivity
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			// retrieve selected items and print them out
+			// retrieve selected items 
  			SparseBooleanArray selected = Adapter.getSelectedIds();
-			StringBuilder message = new StringBuilder();	
-			
-			for (int i = 0; i < selected.size(); i++){				
+ 		    ArrayList<String> paths = new ArrayList<String>();
+
+ 			for (int i = 0; i < selected.size(); i++){				
 			    if (selected.valueAt(i)) {
-			    	String selectedItem = Adapter.getItem(selected.keyAt(i)).getFile().getAbsolutePath();//getting path of file
-			    	message.append(selectedItem + "\n");
-			    }
-			}			
-			Toast.makeText(MainActivity.this, message.toString(), Toast.LENGTH_LONG).show();
+			    	paths.add(Adapter.getItem(selected.keyAt(i)).getFile().getAbsolutePath());
+  			    }
+ 			}
+			
+			switch(item.getItemId()){
+	    	case R.id.copy:
+				Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
+
+	    		break;
+	    	case R.id.delet:
+	    			for(int i=0;i<paths.size();i++){
+	    				
+	    				String path=paths.get(i);
+	    				File file = new File(path);
+	    				boolean deleted = file.delete();
+	    				
+	    				Toast.makeText(MainActivity.this, "delet go gaya", Toast.LENGTH_LONG).show();
+	    				 Intent intent = getIntent();
+	    				    finish();
+	    				    startActivity(intent);
+	    				
+	    			}
+	    		
+	    		
+	    		break;
+	    	case R.id.move:
+				
+				Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
+
+	    		
+	    		break;
+	     
+	   		
+	   		
+
+	    	}
+			
+						
 			
 			// close action mode
 			mode.finish();
