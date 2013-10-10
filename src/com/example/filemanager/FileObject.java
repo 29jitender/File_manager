@@ -40,7 +40,7 @@ public class FileObject
     public String getSize()
     {
         if(isDir)        
-            return "";
+            return "";//folder this is ;)
         return bytecount_format(size, false);
     }
 

@@ -24,10 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.filemanager.View_pdf"
-            android:label="@string/title_activity_view_pdf" >
-        </activity>
+        
     </application>
 
 </manifest>
