@@ -5,27 +5,35 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class MainActivity  
-        extends ListActivity     
+        extends SherlockListActivity     
         implements AdapterView.OnItemClickListener
- {
+ {	private ActionMode mActionMode;
+
     ListView listview;         
     String dir_Path;      
     File[] file_list; //array of items
-     
+    FileAdapter Adapter = null;
      @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
@@ -38,7 +46,7 @@ public class MainActivity
             dir_Path = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
 
-         FileAdapter Adapter = null;
+         
          
          
 		try { //this try catch block is to check the exception if we dont have root permission
@@ -60,8 +68,17 @@ public class MainActivity
 		}
 
          listview.setAdapter(Adapter);
-         listview.setOnItemClickListener(this);
+         
+         
+         listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+ 			@Override
+ 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+ 				onListItemCheck(position);
+ 				//listview.setEnabled(false);
 
+ 				return true;
+ 			}
+ 		});
          setTitle(dir_Path);//setting title 
     }
 
@@ -98,6 +115,70 @@ public class MainActivity
             
         }
     }
+ 	@Override
+ 	protected void onListItemClick(ListView l, View v, int position, long id) {		
+ 		if(mActionMode == null) {
+ 	         listview.setOnItemClickListener(this);//opening folder if it is single
+ 		} else
+ 			// add or remove selection for current list item
+ 			onListItemCheck(position);		
+ 	}
+ 	private void onListItemCheck(int position) {
+ 		Adapter.toggleSelection(position);
+        boolean hasCheckedItems = Adapter.getSelectedCount() > 0;        
 
+        if (hasCheckedItems && mActionMode == null)
+        	// there are some selected items, start the actionMode
+            mActionMode = startActionMode(new ActionModeCallback());
+        else if (!hasCheckedItems && mActionMode != null)
+        	// there no selected items, finish the actionMode
+            mActionMode.finish();
+        
+
+        if(mActionMode != null)
+        	mActionMode.setTitle(String.valueOf(Adapter.getSelectedCount()) + " selected");
+    }
+ 	
+ 	private class ActionModeCallback implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// inflate contextual menu	
+			mode.getMenuInflater().inflate(R.menu.contextual, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {			
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			// retrieve selected items and print them out
+ 			SparseBooleanArray selected = Adapter.getSelectedIds();
+			StringBuilder message = new StringBuilder();	
+			
+			for (int i = 0; i < selected.size(); i++){				
+			    if (selected.valueAt(i)) {
+			    	String selectedItem = Adapter.getItem(selected.keyAt(i)).getFile().getAbsolutePath();//getting path of file
+			    	message.append(selectedItem + "\n");
+			    }
+			}			
+			Toast.makeText(MainActivity.this, message.toString(), Toast.LENGTH_LONG).show();
+			
+			// close action mode
+			mode.finish();
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// remove selection 
+			Adapter.removeSelection();
+			mActionMode = null;
+		}
+		
+	}
  } 
  

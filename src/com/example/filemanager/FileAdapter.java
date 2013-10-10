@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,44 @@ public class FileAdapter
 {
     private ArrayList<FileObject> entries;   
     private Activity activity;             
+	private SparseBooleanArray mSelectedItemsIds;
 
      public FileAdapter(Activity a, int textViewResourceId, ArrayList<FileObject> entries) {
         super(a, textViewResourceId, entries);
+		mSelectedItemsIds = new SparseBooleanArray();
+
         this.entries = entries;
         this.activity = a;
     }
 
+     public void toggleSelection(int position)
+     {
+         selectView(position, !mSelectedItemsIds.get(position));
+     }
+
+     public void removeSelection() {
+         mSelectedItemsIds = new SparseBooleanArray();
+         notifyDataSetChanged();
+     }
+
+     public void selectView(int position, boolean value)
+     {
+         if(value)
+             mSelectedItemsIds.put(position, value);
+         else
+             mSelectedItemsIds.delete(position);
+         
+         notifyDataSetChanged();
+     }
+     
+     public int getSelectedCount() {
+         return mSelectedItemsIds.size();// mSelectedCount;
+     }
+     
+     public SparseBooleanArray getSelectedIds() {
+     	return mSelectedItemsIds;
+     }
+     
      
     @Override
     public View getView(int position, View recycleView, ViewGroup parent) {

@@ -9,8 +9,9 @@
           android:layout_height="wrap_content"
          android:divider="#607086"
          android:longClickable="true"
-         
-    	android:dividerHeight="0.1dip">
+         android:choiceMode="multipleChoice"
+          
+     	android:dividerHeight="0.1dip">
     	        <requestFocus />
             </ListView>
         <TextView android:id="@android:id/empty"
