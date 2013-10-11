@@ -4,10 +4,12 @@ package com.example.filemanager;
  import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import android.widget.TextView;
 public class FileAdapter
         extends ArrayAdapter<FileObject>
 {
+	private ArrayList<FileObject> arraylist;
+
     private ArrayList<FileObject> entries;   
     private Activity activity;             
 	private SparseBooleanArray mSelectedItemsIds;
@@ -30,6 +34,8 @@ public class FileAdapter
 		mSelectedItemsIds = new SparseBooleanArray();
 
         this.entries = entries;
+        this.arraylist = new ArrayList<FileObject>();
+        this.arraylist.addAll(entries);
         this.activity = a;
     }
 
@@ -47,7 +53,7 @@ public class FileAdapter
      {
          if(value)
              mSelectedItemsIds.put(position, value);
-         else
+          else
              mSelectedItemsIds.delete(position);
          
          notifyDataSetChanged();
@@ -72,6 +78,7 @@ public class FileAdapter
             LayoutInflater vi = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.list_row, null);
         }
+    	v.setBackgroundColor(mSelectedItemsIds.get(position)? 0x9934B5E4: Color.TRANSPARENT);   //changing colr of selected     	
 
          final FileObject file = entries.get(position);
          	Resources res = v.getResources();
@@ -138,4 +145,24 @@ public class FileAdapter
 
  		return d;
  	}
+     
+     
+     // Filter Class
+     public void filter(String charText) {
+         charText = charText.toLowerCase(Locale.getDefault());
+         entries.clear();
+         if (charText.length() == 0) {
+        	 entries.addAll(arraylist);
+         } else {
+             for (FileObject wp : arraylist) {
+                 if (wp.getName().toLowerCase(Locale.getDefault())
+                         .contains(charText)) {
+                	 entries.add(wp);
+                 }
+                
+                 
+             }
+         }
+         notifyDataSetChanged();
+     }
 }

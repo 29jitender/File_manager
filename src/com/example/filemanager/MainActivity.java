@@ -10,9 +10,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.SparseBooleanArray;
@@ -35,7 +37,10 @@ import com.actionbarsherlock.view.MenuItem;
 public class MainActivity  
         extends SherlockListActivity     
         implements AdapterView.OnItemClickListener
- {	private ActionMode mActionMode;
+ {	     public static ProgressDialog dialog ;//dialog
+
+	  RelativeLayout paste_layout=null;
+private ActionMode mActionMode;
      ListView listview;         
     String dir_Path;      
     File[] file_list; //array of items
@@ -44,7 +49,8 @@ public class MainActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
          setContentView(R.layout.activity_main);
- 
+	      paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
+
 
         listview = getListView();     
         dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
@@ -92,12 +98,11 @@ public class MainActivity
 
      @Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
+	      dialog=new ProgressDialog(MainActivity.this);	
  		    final ArrayList<String> path_recived  ;
 		    if(File_move.path_list!=null){
  		    	path_recived=File_move.path_list;
 		    	
-		    	final RelativeLayout paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
 		    	paste_layout.setVisibility(View.VISIBLE);
 		    	
 		    	Button paste =(Button)findViewById(R.id.paste);
@@ -113,66 +118,222 @@ public class MainActivity
 		    	paste.setOnClickListener(new View.OnClickListener(){
 		    		public void onClick(View View3) {
 		    			
-		    					    			
-		    			
-		    			for(int i=0;i<path_recived.size();i++){
-		    				String sourcePath=path_recived.get(i);
-		    				File sourc_file = new File(sourcePath);
-		    				String filename = null;
-		    				  if(sourc_file.isDirectory()) //if its a directry
-		    			        {
-				    				File dest_file=new File(dir_Path);
+		    			if(File_move.move){
+ 		    				
+		    				 class file_move_async extends AsyncTask<Void, Void, Integer> {
+		    			    	 
+		    			         protected Integer doInBackground(Void... params) {
+		    			        	 
+		    			        		for(int i=0;i<path_recived.size();i++){
+		    			    				String sourcePath=path_recived.get(i);
+		    			    				File sourc_file = new File(sourcePath);
+		    			    				String filename = null;
+		    			    				int lastslashPosition = sourcePath.lastIndexOf('/');
+		    			    				if( lastslashPosition > 0 ) {
+		    			    					filename = sourcePath.substring(lastslashPosition + 1);
+		    			    				}
+		    			    				File dest_file=new File(dir_Path+"/"+filename);
 
-		    					  try {
-									copyDirectoryOneLocationToAnotherLocation(sourc_file, dest_file);
- 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-		    					  
+		    			    				if(sourc_file.isDirectory()) //if its a directry
+		    			    			        {
+ 
+		    			    					  try {
+		    										copy_fileordir(sourc_file, dest_file);
+		    	 								} catch (IOException e) {
+		    										// TODO Auto-generated catch block
+		    										e.printStackTrace();
+		    									}
+		    			    					  
+		    			    			         }
+		    			    				  else{
+		    			    				
+		    			    				 
+		    			    				
+		    			    				
+		    			    				try {
+		    			    					
+		    			    					copy_fileordir(sourc_file, dest_file) ; 
+		    	 							} catch (IOException e) {
+		    									// TODO Auto-generated catch block
+		    									e.printStackTrace();
+		    								}
+		    			    				  }
+		    	 					    	
+		    			    			}
+		    			             return null;
+		    			              
+		    			             
 		    			         }
-		    				  else{
-		    				
-		    				int lastslashPosition = sourcePath.lastIndexOf('/');
-		    				if( lastslashPosition > 0 ) {
-		    					filename = sourcePath.substring(lastslashPosition + 1);
-		    				}
-		    				
-		    				File dest_file=new File(dir_Path+"/"+filename);
-		    				
-		    				try {
+
+		    			         
+		    			@Override
+		    			         protected void onPreExecute() {
+		    					dialog.setMessage("Moving please wait");
+		    					dialog.show();
+		    			             super.onPreExecute();
+		    			         }
+
+
+		    				protected void onPostExecute(Integer result) {
 		    					
-		    					copyDirectoryOneLocationToAnotherLocation(sourc_file, dest_file) ; 
- 							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+		    					for(int i=0;i<path_recived.size();i++){
+		    	    				
+		    	    				String path=path_recived.get(i);
+		    	    				File file = new File(path);
+		    	    				DeleteRecursive(file);
+		    	    				
+		    	    				
+		    	    			}
+		    	    			
+		    	    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+		    	    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
+		    	    			
+ 		       				 	 
+		    					
+		    					
+		    					File_move.path_list = null; //removing list
+			    				File_move.move=false;
+						    	paste_layout.setVisibility(View.GONE);
+						    	dialog.dismiss();
+
+						    	refresh_activity();
+		    			             super.onPostExecute(result);
+		    			         }
+
+
+							private void DeleteRecursive(File fileOrDirectory) {
+								if (fileOrDirectory.isDirectory())
+							        for (File child : fileOrDirectory.listFiles())
+							            DeleteRecursive(child);
+
+							    fileOrDirectory.delete();								
 							}
-		    				  }
- 					    	
-		    			}
-		    				File_move.path_list = null; //removing list
-					    	paste_layout.setVisibility(View.GONE);
+		    			     }
+		    				
+		    				
+		    				
+		    		            new file_move_async().execute();//checking api after the values are updated in conf_api
+
+		    				 
+		    				 
+		    				 
+		    				 
+		    				 
+		    				 
+		    				 
+		    			}	else{	    			
+		    					class Copy_file_async extends AsyncTask<Void, Void, Integer> {
+		    			    	 
+		    			         protected Integer doInBackground(Void... params) {
+
+		    			        		for(int i=0;i<path_recived.size();i++){
+		    			    				String sourcePath=path_recived.get(i);
+		    			    				File sourc_file = new File(sourcePath);
+		    			    				String filename = null;
+		    			    				int lastslashPosition = sourcePath.lastIndexOf('/');
+		    			    				if( lastslashPosition > 0 ) {
+		    			    					filename = sourcePath.substring(lastslashPosition + 1);
+		    			    				}
+		    			    				
+		    			    				File dest_file=new File(dir_Path+"/"+filename);
+ 
+		    			    				  if(sourc_file.isDirectory()) //if its a directry
+		    			    			        {
+		    			    					  
+		    	 
+		    			    					  try {
+		    										copy_fileordir(sourc_file, dest_file);
+		    	 								} catch (IOException e) {
+		    										// TODO Auto-generated catch block
+		    										e.printStackTrace();
+		    									}
+		    			    					  
+		    			    			         }
+		    			    				  else{
+		    			    				
+		    			    				
+		    			    				
+		    			    				try {
+		    			    					
+		    			    					copy_fileordir(sourc_file, dest_file) ; 
+		    	 							} catch (IOException e) {
+		    									// TODO Auto-generated catch block
+		    									e.printStackTrace();
+		    								}
+		    			    				
+		    			    				
+		    			    				  }
+		    			    					
+		    			    			}
+		    			    				 
+		    			    		 
+		    			             return null;
+		    			              
+		    			             
+		    			         }
+
+		    			         
+		    			@Override
+		    			         protected void onPreExecute() {
+		    					dialog.setMessage("Copying please wait");
+		    					dialog.show();
+		    			             super.onPreExecute();
+		    			         }
+
+
+		    				protected void onPostExecute(Integer result) {
+		    					
+		    					File_move.path_list = null; //removing list
+			    				File_move.move=false;
+						     	paste_layout.setVisibility(View.GONE);
+ 						    	dialog.dismiss();
+
+		    	    			refresh_activity();
+	    			             super.onPostExecute(result);
+
+		    			         }
+
+
+						 
+		    			     }
+		    				
+		    				
+		    				
+		    		            new Copy_file_async().execute();//checking api after the values are updated in conf_api
+
+		    				
+		    				
+		    		
 					    	
-		    			
+		    			}
+		    		
  		    		} });
 
  		    }
 		super.onResume();
 	}
   
+     
+     
+    
+ 
+     
+     
 
-     public static void copyDirectoryOneLocationToAnotherLocation(File sourceLocation, File targetLocation)
+     public static void copy_fileordir(File sourceLocation, File targetLocation)
     	        throws IOException {
 
     	    if (sourceLocation.isDirectory()) {
+    	    	
     	        if (!targetLocation.exists()) {
     	            targetLocation.mkdir();
     	        }
-
+    	         
+    	        
     	        String[] children = sourceLocation.list();
     	        for (int i = 0; i < sourceLocation.listFiles().length; i++) {
 
-    	            copyDirectoryOneLocationToAnotherLocation(new File(sourceLocation, children[i]),
+    	            copy_fileordir(new File(sourceLocation, children[i]),
     	                    new File(targetLocation, children[i]));
     	        }
     	    } else {
@@ -198,14 +359,17 @@ public class MainActivity
          String path = dir_Path + "/" + ((TextView)view.findViewById(R.id.fileName)).getText().toString();
  
             File file1 = new File(path);
+	    	paste_layout.setVisibility(View.GONE);
 
          if(file1.isDirectory()) //if its a directry
         {
             
             Intent next = new Intent(MainActivity.this, MainActivity.class);
-            
             next.putExtra("path", path);//putting path
+           // finish();
             startActivity(next); //starting it again with new path and show that again 
+		    overridePendingTransition(0,0);
+
          }
          else
         { // otherwise open the file using defult 
@@ -278,10 +442,10 @@ public class MainActivity
 	    	case R.id.copy:
 	    		File_move send_path = new File_move();
 	    		send_path.setpath(paths);
-	    		//Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
-	    		Intent intent2 = getIntent();
-				    finish();
-				    startActivity(intent2);
+	    		send_path.setmove(false);
+ 	    		//Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
+    			refresh_activity();
+
 	    		break;
 	    	case R.id.delet:
 	    		
@@ -298,19 +462,17 @@ public class MainActivity
 	    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
 	    			
 	    			Toast.makeText(MainActivity.this, "delet go gaya", Toast.LENGTH_LONG).show();
-   				 	Intent intent = getIntent();
-   				    finish();
-   				    startActivity(intent);
+	    			refresh_activity();
 	    		
 	    		break;
 	    	case R.id.move:
-				
-				Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
+	    		File_move send_path_move = new File_move();
+	    		send_path_move.setpath(paths);
+	    		send_path_move.setmove(true);
+    			refresh_activity();
 
-	    		
-	    		break;
-	     
-	   		
+ 	    		
+	    		break;	        		
 	   		
 
 	    	}
@@ -321,7 +483,8 @@ public class MainActivity
 			mode.finish();
 			return false;
 		}
-		void DeleteRecursive(File fileOrDirectory) {
+		
+		public void DeleteRecursive(File fileOrDirectory) {
 		    if (fileOrDirectory.isDirectory())
 		        for (File child : fileOrDirectory.listFiles())
 		            DeleteRecursive(child);
@@ -336,5 +499,32 @@ public class MainActivity
 		}
 		
 	}
+ 	public  void refresh_activity(){
+		Intent intent = getIntent();
+		    finish();
+		    startActivity(intent);
+		    overridePendingTransition(0,0);
+
+	}
+
+
+	@Override
+	public void onBackPressed() {
+//		String sdcard = Environment.getExternalStorageDirectory().toString();     //initial path
+//		if(dir_Path.equals(sdcard)){
+//				finish();
+//		}else{
+//		int lastslashPosition = dir_Path.lastIndexOf('/');
+//
+//		Intent next = new Intent(MainActivity.this, MainActivity.class);
+//        next.putExtra("path", dir_Path.subSequence(0, lastslashPosition));//putting path
+//         startActivity(next); //starting it again with new path and show that again
+//		    overridePendingTransition(0,0);
+//
+//		}
+ 		super.onBackPressed();
+	}
+ 
+
  } 
  
