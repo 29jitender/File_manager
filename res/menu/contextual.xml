@@ -12,5 +12,5 @@
         android:id="@+id/move"
         android:title="Move">
     </item>
-
+ 
 </menu> 

@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -30,8 +33,7 @@ public class MainActivity
         extends SherlockListActivity     
         implements AdapterView.OnItemClickListener
  {	private ActionMode mActionMode;
-
-    ListView listview;         
+     ListView listview;         
     String dir_Path;      
     File[] file_list; //array of items
     FileAdapter Adapter = null;
@@ -39,7 +41,7 @@ public class MainActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
          setContentView(R.layout.activity_main);
-
+ 
 
         listview = getListView();     
         dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
@@ -67,7 +69,7 @@ public class MainActivity
              })
              .show();			e.printStackTrace();
 		}
-
+ 
          listview.setAdapter(Adapter);
          
          
@@ -85,6 +87,20 @@ public class MainActivity
 
 
      @Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+ 		    ArrayList<String> path_recived = new ArrayList<String>();
+		    if(File_move.path_list!=null){
+		    	path_recived=File_move.path_list;
+		    	
+		    	 
+
+		    }
+		super.onResume();
+	}
+
+
+	@Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
     {
          String path = dir_Path + "/" + ((TextView)view.findViewById(R.id.fileName)).getText().toString();
@@ -168,23 +184,31 @@ public class MainActivity
 			
 			switch(item.getItemId()){
 	    	case R.id.copy:
-				Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
-
+	    		File_move send_path = new File_move();
+	    		send_path.setpath(paths);
+	    		//Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
+	    		Intent intent2 = getIntent();
+				    finish();
+				    startActivity(intent2);
 	    		break;
 	    	case R.id.delet:
+	    		
 	    			for(int i=0;i<paths.size();i++){
 	    				
 	    				String path=paths.get(i);
 	    				File file = new File(path);
-	    				boolean deleted = file.delete();
+	    				DeleteRecursive(file);
 	    				
-	    				Toast.makeText(MainActivity.this, "delet go gaya", Toast.LENGTH_LONG).show();
-	    				 Intent intent = getIntent();
-	    				    finish();
-	    				    startActivity(intent);
 	    				
 	    			}
-	    		
+	    			
+	    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+	    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
+	    			
+	    			Toast.makeText(MainActivity.this, "delet go gaya", Toast.LENGTH_LONG).show();
+   				 	Intent intent = getIntent();
+   				    finish();
+   				    startActivity(intent);
 	    		
 	    		break;
 	    	case R.id.move:
@@ -205,7 +229,13 @@ public class MainActivity
 			mode.finish();
 			return false;
 		}
+		void DeleteRecursive(File fileOrDirectory) {
+		    if (fileOrDirectory.isDirectory())
+		        for (File child : fileOrDirectory.listFiles())
+		            DeleteRecursive(child);
 
+		    fileOrDirectory.delete();
+		}
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			// remove selection 
