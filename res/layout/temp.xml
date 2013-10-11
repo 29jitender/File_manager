@@ -7,45 +7,26 @@
            android:background="#2e3846"
       >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp" 
-        android:id="@+id/paste_layout"
-       >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+         android:layout_weight="0.05">
 
-        <Button
-            android:id="@+id/cancel"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="cancel" />
+        <SearchView
+            android:id="@+id/searchView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </SearchView>
 
-        <Button
-            android:id="@+id/paste"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="paste" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/paste"
-            android:layout_alignBottom="@+id/paste"
-            android:layout_centerHorizontal="true"
-            android:text="Large Text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-        <ListView android:id="@android:id/list"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+         android:layout_weight="0.8">
+ <ListView android:id="@android:id/list"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
          android:divider="#607086"
@@ -62,5 +43,28 @@
           android:textColor="#fff"
           android:textSize="90dp"/>
     </LinearLayout>
-        
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+                 android:layout_weight="0.1"
+                 android:id="@+id/paste_layout"
+        android:visibility="gone">
+           <Button
+            android:id="@+id/cancel"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel" />
+
+        <Button
+            android:id="@+id/paste"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="paste" />
+    </RelativeLayout>
+ 
 </LinearLayout>

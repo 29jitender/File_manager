@@ -913,16 +913,18 @@ containing a value of this type.
         public static final int android=0x7f020070;
         public static final int folder=0x7f020071;
         public static final int ic_launcher=0x7f020072;
-        public static final int image=0x7f020073;
-        public static final int left_arrow=0x7f020074;
-        public static final int music=0x7f020075;
-        public static final int none=0x7f020076;
-        public static final int pdf=0x7f020077;
-        public static final int right_arrow=0x7f020078;
-        public static final int video=0x7f020079;
-        public static final int xml=0x7f02007a;
-        public static final int zoom_in=0x7f02007b;
-        public static final int zoom_out=0x7f02007c;
+        public static final int ic_search=0x7f020073;
+        public static final int ic_search_inverse=0x7f020074;
+        public static final int image=0x7f020075;
+        public static final int left_arrow=0x7f020076;
+        public static final int music=0x7f020077;
+        public static final int none=0x7f020078;
+        public static final int pdf=0x7f020079;
+        public static final int right_arrow=0x7f02007a;
+        public static final int video=0x7f02007b;
+        public static final int xml=0x7f02007c;
+        public static final int zoom_in=0x7f02007d;
+        public static final int zoom_out=0x7f02007e;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
@@ -981,11 +983,12 @@ containing a value of this type.
         public static final int normal=0x7f040001;
         public static final int paste=0x7f040035;
         public static final int paste_layout=0x7f040033;
+        public static final int search=0x7f04003f;
+        public static final int searchView1=0x7f04003a;
         public static final int showCustom=0x7f040008;
         public static final int showHome=0x7f040005;
         public static final int showTitle=0x7f040007;
         public static final int tabMode=0x7f040003;
-        public static final int textView1=0x7f04003a;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;
     }
@@ -1015,15 +1018,17 @@ containing a value of this type.
         public static final int abs__search_view=0x7f030013;
         public static final int abs__simple_dropdown_hint=0x7f030014;
         public static final int activity_main=0x7f030015;
-        public static final int list_row=0x7f030016;
-        public static final int sherlock_spinner_dropdown_item=0x7f030017;
-        public static final int sherlock_spinner_item=0x7f030018;
-        public static final int temp=0x7f030019;
+        public static final int collapsible_edittext=0x7f030016;
+        public static final int list_row=0x7f030017;
+        public static final int sherlock_spinner_dropdown_item=0x7f030018;
+        public static final int sherlock_spinner_item=0x7f030019;
+        public static final int temp=0x7f03001a;
     }
     public static final class menu {
         public static final int contextual=0x7f0b0000;
         public static final int main=0x7f0b0001;
-        public static final int view_pdf=0x7f0b0002;
+        public static final int temp=0x7f0b0002;
+        public static final int view_pdf=0x7f0b0003;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

@@ -4,7 +4,6 @@ package com.example.filemanager;
  import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,8 +22,6 @@ import android.widget.TextView;
 public class FileAdapter
         extends ArrayAdapter<FileObject>
 {
-	private ArrayList<FileObject> arraylist;
-
     private ArrayList<FileObject> entries;   
     private Activity activity;             
 	private SparseBooleanArray mSelectedItemsIds;
@@ -34,8 +31,6 @@ public class FileAdapter
 		mSelectedItemsIds = new SparseBooleanArray();
 
         this.entries = entries;
-        this.arraylist = new ArrayList<FileObject>();
-        this.arraylist.addAll(entries);
         this.activity = a;
     }
 
@@ -145,24 +140,4 @@ public class FileAdapter
 
  		return d;
  	}
-     
-     
-     // Filter Class
-     public void filter(String charText) {
-         charText = charText.toLowerCase(Locale.getDefault());
-         entries.clear();
-         if (charText.length() == 0) {
-        	 entries.addAll(arraylist);
-         } else {
-             for (FileObject wp : arraylist) {
-                 if (wp.getName().toLowerCase(Locale.getDefault())
-                         .contains(charText)) {
-                	 entries.add(wp);
-                 }
-                
-                 
-             }
-         }
-         notifyDataSetChanged();
-     }
 }

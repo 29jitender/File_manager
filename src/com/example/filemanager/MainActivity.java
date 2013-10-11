@@ -36,11 +36,10 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity  
         extends SherlockListActivity     
-        implements AdapterView.OnItemClickListener
- {	     public static ProgressDialog dialog ;//dialog
+  {	     public static ProgressDialog dialog ;//dialog
 
 	  RelativeLayout paste_layout=null;
-private ActionMode mActionMode;
+	  private ActionMode mActionMode;
      ListView listview;         
     String dir_Path;      
     File[] file_list; //array of items
@@ -353,45 +352,16 @@ private ActionMode mActionMode;
 
     	}
  
-	@Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-    {
-         String path = dir_Path + "/" + ((TextView)view.findViewById(R.id.fileName)).getText().toString();
- 
-            File file1 = new File(path);
-	    	paste_layout.setVisibility(View.GONE);
-
-         if(file1.isDirectory()) //if its a directry
-        {
-            
-            Intent next = new Intent(MainActivity.this, MainActivity.class);
-            next.putExtra("path", path);//putting path
-           // finish();
-            startActivity(next); //starting it again with new path and show that again 
-		    overridePendingTransition(0,0);
-
-         }
-         else
-        { // otherwise open the file using defult 
-            Intent intent = new Intent();
-            //using a builtin Intent.
-
-             intent.setAction(android.content.Intent.ACTION_VIEW);
-
-             File file = new File(path); // defining file
-            MimeTypeMap mime = MimeTypeMap.getSingleton();// this is used to open files
-            String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
-            String type = mime.getMimeTypeFromExtension(ext);  //
-           
-             intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
-            startActivity(intent);
-            
-        }
-    }
+	 
+   
  	@Override
  	protected void onListItemClick(ListView l, View v, int position, long id) {		
- 		if(mActionMode == null) {
- 	         listview.setOnItemClickListener(this);//opening folder if it is single
+ 		if(mActionMode == null) {//normal list click
+
+ 			onsingleclick(v);
+ 		
+ 		
+ 		
  		} else
  			// add or remove selection for current list item
  			onListItemCheck(position);		
@@ -411,6 +381,42 @@ private ActionMode mActionMode;
         if(mActionMode != null)
         	mActionMode.setTitle(String.valueOf(Adapter.getSelectedCount()) + " selected");
     }
+ 	
+ 	 public void onsingleclick(View view)
+     {
+ 		 String path = dir_Path + "/" + ((TextView)view.findViewById(R.id.fileName)).getText().toString();
+ 		 
+          File file1 = new File(path);
+ 	    	paste_layout.setVisibility(View.GONE);
+
+       if(file1.isDirectory()) //if its a directry
+      {
+          
+          Intent next = new Intent(MainActivity.this, MainActivity.class);
+          next.putExtra("path", path);//putting path
+         // finish();
+          startActivity(next); //starting it again with new path and show that again 
+ 		    overridePendingTransition(0,0);
+
+       }
+       else
+      { // otherwise open the file using defult 
+          Intent intent = new Intent();
+          //using a builtin Intent.
+
+           intent.setAction(android.content.Intent.ACTION_VIEW);
+
+           File file = new File(path); // defining file
+          MimeTypeMap mime = MimeTypeMap.getSingleton();// this is used to open files
+          String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
+          String type = mime.getMimeTypeFromExtension(ext);  //
+         
+           intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
+          startActivity(intent);
+          
+      }
+     }
+ 	
  	
  	private class ActionModeCallback implements ActionMode.Callback {
 
