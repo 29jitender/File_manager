@@ -2,24 +2,27 @@ package com.example.filemanager;
 
  
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +61,7 @@ public class MainActivity
 			 for (int i = 0; i < file_list.length; i++) //itrating over the length of file list
 			    Adapter.add(new FileObject(file_list[i])); //adding item to fileobjec
 			 Adapter.sort();
+			 
 		} catch (Exception e) {
 			 new AlertDialog.Builder(this)//opening a dialog box wiht msg
              .setTitle("Need root permission to open this")
@@ -89,17 +93,105 @@ public class MainActivity
      @Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
- 		    ArrayList<String> path_recived = new ArrayList<String>();
+ 		    final ArrayList<String> path_recived  ;
 		    if(File_move.path_list!=null){
-		    	path_recived=File_move.path_list;
+ 		    	path_recived=File_move.path_list;
 		    	
-		    	 
+		    	final RelativeLayout paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
+		    	paste_layout.setVisibility(View.VISIBLE);
+		    	
+		    	Button paste =(Button)findViewById(R.id.paste);
+		    	Button cancel =(Button)findViewById(R.id.cancel);
+		    	
+		    	cancel.setOnClickListener(new View.OnClickListener(){
+		    		public void onClick(View View3) {
+		    			File_move.path_list = null; //removing list
+				    	paste_layout.setVisibility(View.GONE);
 
-		    }
+ 		    		} });
+		    	
+		    	paste.setOnClickListener(new View.OnClickListener(){
+		    		public void onClick(View View3) {
+		    			
+		    					    			
+		    			
+		    			for(int i=0;i<path_recived.size();i++){
+		    				String sourcePath=path_recived.get(i);
+		    				File sourc_file = new File(sourcePath);
+		    				String filename = null;
+		    				  if(sourc_file.isDirectory()) //if its a directry
+		    			        {
+				    				File dest_file=new File(dir_Path);
+
+		    					  try {
+									copyDirectoryOneLocationToAnotherLocation(sourc_file, dest_file);
+ 								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+		    					  
+		    			         }
+		    				  else{
+		    				
+		    				int lastslashPosition = sourcePath.lastIndexOf('/');
+		    				if( lastslashPosition > 0 ) {
+		    					filename = sourcePath.substring(lastslashPosition + 1);
+		    				}
+		    				
+		    				File dest_file=new File(dir_Path+"/"+filename);
+		    				
+		    				try {
+		    					
+		    					copyDirectoryOneLocationToAnotherLocation(sourc_file, dest_file) ; 
+ 							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+		    				  }
+ 					    	
+		    			}
+		    				File_move.path_list = null; //removing list
+					    	paste_layout.setVisibility(View.GONE);
+					    	
+		    			
+ 		    		} });
+
+ 		    }
 		super.onResume();
 	}
+  
 
+     public static void copyDirectoryOneLocationToAnotherLocation(File sourceLocation, File targetLocation)
+    	        throws IOException {
 
+    	    if (sourceLocation.isDirectory()) {
+    	        if (!targetLocation.exists()) {
+    	            targetLocation.mkdir();
+    	        }
+
+    	        String[] children = sourceLocation.list();
+    	        for (int i = 0; i < sourceLocation.listFiles().length; i++) {
+
+    	            copyDirectoryOneLocationToAnotherLocation(new File(sourceLocation, children[i]),
+    	                    new File(targetLocation, children[i]));
+    	        }
+    	    } else {
+
+    	        InputStream in = new FileInputStream(sourceLocation);
+
+    	        OutputStream out = new FileOutputStream(targetLocation);
+
+     	        byte[] buf = new byte[1024];
+    	        int len;
+    	        while ((len = in.read(buf)) > 0) {
+    	            out.write(buf, 0, len);
+    	        }
+    	        in.close();
+    	        out.close();
+    	    }
+
+    	}
+ 
 	@Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
     {

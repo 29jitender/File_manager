@@ -1,57 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:orientation="horizontal">
+    android:id="@+id/linear_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+     android:orientation="vertical"
+           android:background="#2e3846"
+      >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        			android:layout_weight="0.2"
-         >
-         
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_launcher" />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="250dp"
-        android:layout_height="100dp" >
-
-        <TextView
-            android:id="@+id/fileName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Filename"
-            android:textSize="20dp" />
-
-        <TextView
-            android:id="@+id/fileModified"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="19dp"
-            android:text="Modified"
-            android:textSize="12dp" />
-
-        <TextView
-            android:id="@+id/fileSize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/fileName"
-            android:layout_alignBottom="@+id/fileName"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:text="Size"
-            android:textSize="15dp" />
-
-    </RelativeLayout>
-
+    
 </LinearLayout>
