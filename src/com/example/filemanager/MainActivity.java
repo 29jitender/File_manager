@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StatFs;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -39,6 +40,7 @@ public class MainActivity
   {	     public static ProgressDialog dialog ;//dialog
 
 	  RelativeLayout paste_layout=null;
+	  TextView copyormove;
 	  private ActionMode mActionMode;
      ListView listview;         
     String dir_Path;      
@@ -50,6 +52,7 @@ public class MainActivity
          setContentView(R.layout.activity_main);
 	      paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
 
+	      copyormove =(TextView)findViewById(R.id.copyormove);
 
         listview = getListView();     
         dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
@@ -98,27 +101,31 @@ public class MainActivity
      @Override
 	protected void onResume() {
 	      dialog=new ProgressDialog(MainActivity.this);	
+	  	Button paste =(Button)findViewById(R.id.paste);
+    	Button cancel =(Button)findViewById(R.id.cancel);
+    	
+    	
+    	
+    	
  		    final ArrayList<String> path_recived  ;
 		    if(File_move.path_list!=null){
  		    	path_recived=File_move.path_list;
 		    	
 		    	paste_layout.setVisibility(View.VISIBLE);
-		    	
-		    	Button paste =(Button)findViewById(R.id.paste);
-		    	Button cancel =(Button)findViewById(R.id.cancel);
-		    	
-		    	cancel.setOnClickListener(new View.OnClickListener(){
-		    		public void onClick(View View3) {
-		    			File_move.path_list = null; //removing list
-				    	paste_layout.setVisibility(View.GONE);
+		    	if(File_move.move){
+	    				copyormove.setText("Move here");
 
- 		    		} });
+		    	}
+		    	else{
+	    				copyormove.setText("Copy here");
+		    		
+		    	}
+		    
 		    	
 		    	paste.setOnClickListener(new View.OnClickListener(){
 		    		public void onClick(View View3) {
 		    			
 		    			if(File_move.move){
- 		    				
 		    				 class file_move_async extends AsyncTask<Void, Void, Integer> {
 		    			    	 
 		    			         protected Integer doInBackground(Void... params) {
@@ -133,6 +140,14 @@ public class MainActivity
 		    			    				}
 		    			    				File dest_file=new File(dir_Path+"/"+filename);
 
+  		    			    				String destcheck=dir_Path+"/"+filename;
+ 
+		    			    				if(destcheck.equals(sourcePath)){
+		    			    					
+		    					 	    		Toast.makeText(MainActivity.this, "Select other Directory", Toast.LENGTH_SHORT).show();
+
+		    			    				}
+		    			    				else{
 		    			    				if(sourc_file.isDirectory()) //if its a directry
 		    			    			        {
  
@@ -158,7 +173,7 @@ public class MainActivity
 		    								}
 		    			    				  }
 		    	 					    	
-		    			    			}
+		    			    			}}
 		    			             return null;
 		    			              
 		    			             
@@ -220,8 +235,8 @@ public class MainActivity
 		    				 
 		    				 
 		    				 
-		    			}	else{	    			
-		    					class Copy_file_async extends AsyncTask<Void, Void, Integer> {
+		    			}	else{	    	
+ 		    					class Copy_file_async extends AsyncTask<Void, Void, Integer> {
 		    			    	 
 		    			         protected Integer doInBackground(Void... params) {
 
@@ -235,7 +250,14 @@ public class MainActivity
 		    			    				}
 		    			    				
 		    			    				File dest_file=new File(dir_Path+"/"+filename);
+ 		    			    				String destcheck=dir_Path+"/"+filename;
  
+		    			    				if(destcheck.equals(sourcePath)){
+		    					 	    		Toast.makeText(MainActivity.this, "Select other Directory", Toast.LENGTH_SHORT).show();
+
+		    			    					
+		    			    				}
+		    			    				else{
 		    			    				  if(sourc_file.isDirectory()) //if its a directry
 		    			    			        {
 		    			    					  
@@ -265,7 +287,7 @@ public class MainActivity
 		    			    					
 		    			    			}
 		    			    				 
-		    			    		 
+		    			        		}
 		    			             return null;
 		    			              
 		    			             
@@ -309,6 +331,21 @@ public class MainActivity
  		    		} });
 
  		    }
+		    else{
+		    	cancel.setOnClickListener(new View.OnClickListener(){
+		    		public void onClick(View View3) {
+		    			File_move.path_list = null; //removing list
+				    	paste_layout.setVisibility(View.GONE);
+
+			    		} });
+		    	paste.setOnClickListener(new View.OnClickListener(){
+		    		public void onClick(View View3) {
+		 	    		Toast.makeText(MainActivity.this, "Select other Directory", Toast.LENGTH_SHORT).show();
+
+
+			    		} });
+		    	
+		    }
 		super.onResume();
 	}
   
@@ -452,7 +489,7 @@ public class MainActivity
  	    		//Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
     			//refresh_activity();
 		    	paste_layout.setVisibility(View.VISIBLE);
-
+		    	copyormove.setText("Copy here");
 	    		break;
 	    	case R.id.delet:
 	    		
@@ -477,7 +514,7 @@ public class MainActivity
 	    		send_path_move.setpath(paths);
 	    		send_path_move.setmove(true);
 		    	paste_layout.setVisibility(View.VISIBLE);
-
+		    	copyormove.setText("Move here");
     			//refresh_activity();
 
  	    		
@@ -516,7 +553,20 @@ public class MainActivity
 
 	}
 
-
+	private void updateStorageLabel() {
+		long total, aval;
+		int kb = 1024;
+		
+		StatFs fs = new StatFs(Environment.
+								getExternalStorageDirectory().getPath());
+		
+		total = fs.getBlockCount() * (fs.getBlockSize() / kb);
+		aval = fs.getAvailableBlocks() * (fs.getBlockSize() / kb);
+		
+//		storagetext.setText(String.format("sdcard: Total %.2f GB " +
+//							  "\t\tAvailable %.2f GB", 
+//							  (double)total / (kb * kb), (double)aval / (kb * kb)));
+	}
 	@Override
 	public void onBackPressed() {
 //		String sdcard = Environment.getExternalStorageDirectory().toString();     //initial path

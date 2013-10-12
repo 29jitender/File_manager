@@ -13,11 +13,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -136,10 +134,15 @@ public class FileAdapter
  				} else if (extension.equals(".pdf")) {
  					d = res.getDrawable(R.drawable.pdf);
  				} else if (extension.equals(".jpg")
- 						|| extension.equals(".jpeg")) {
-   					
- 
- 					//d = res.getDrawable(R.drawable.image);
+ 						|| extension.equals(".jpeg")
+ 						|| extension.equals(".png")
+ 						|| extension.equals(".gif")
+ 						|| extension.equals(".tif")
+ 						|| extension.equals(".tiff")) {
+ 					 
+ 				 
+ 					
+ 					d = res.getDrawable(R.drawable.image);
  				} else if (extension.equals(".xml")) {
  					d = res.getDrawable(R.drawable.xml);
  				} else if (extension.equals(".apk")) {

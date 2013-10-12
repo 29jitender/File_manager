@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" 
-         android:layout_weight="0.8">
+         android:layout_weight="0.9">
  <ListView android:id="@android:id/list"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -35,22 +35,39 @@
         android:layout_height="wrap_content"
                  android:layout_weight="0.1"
                  android:id="@+id/paste_layout"
-        android:visibility="gone">
-           <Button
-            android:id="@+id/cancel"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="cancel" />
+        android:visibility="gone"
+        android:background="#171c23">
 
-        <Button
+           <com.example.filemanager.Icon_font_button
+               android:id="@+id/cancel"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/cancel"
+               android:textSize="30dp"
+            android:textColor="#fff" />
+
+           <com.example.filemanager.Icon_font_button
             android:id="@+id/paste"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="paste" />
+            android:text="@string/ok" 
+            android:textSize="30dp"
+            android:textColor="#fff"/>
+
+        <TextView
+            android:id="@+id/copyormove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="copy or paste"
+            android:textColor="#607086"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
     </RelativeLayout>
  
 </LinearLayout>
