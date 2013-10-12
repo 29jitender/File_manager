@@ -11,7 +11,7 @@ public class FileObject
         implements Comparable<FileObject> 
 {
     boolean isDir;
-    String path, name ;
+    public   String path, name ;
     long size;
     Date last_modified;
       File rec;
@@ -27,7 +27,9 @@ public class FileObject
         rec=recived_file;
           
     }
-
+     public String getpath(){
+    	 return path;
+     }
      public String getName()
     {
         return name;

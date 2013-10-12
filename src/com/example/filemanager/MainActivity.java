@@ -450,7 +450,8 @@ public class MainActivity
 	    		send_path.setpath(paths);
 	    		send_path.setmove(false);
  	    		//Toast.makeText(MainActivity.this, paths+"", Toast.LENGTH_LONG).show();
-    			refresh_activity();
+    			//refresh_activity();
+		    	paste_layout.setVisibility(View.VISIBLE);
 
 	    		break;
 	    	case R.id.delet:
@@ -467,7 +468,7 @@ public class MainActivity
 	    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
 	    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
 	    			
-	    			Toast.makeText(MainActivity.this, "delet go gaya", Toast.LENGTH_LONG).show();
+	    			Toast.makeText(MainActivity.this, "Successfully Deleted", Toast.LENGTH_LONG).show();
 	    			refresh_activity();
 	    		
 	    		break;
@@ -475,7 +476,9 @@ public class MainActivity
 	    		File_move send_path_move = new File_move();
 	    		send_path_move.setpath(paths);
 	    		send_path_move.setmove(true);
-    			refresh_activity();
+		    	paste_layout.setVisibility(View.VISIBLE);
+
+    			//refresh_activity();
 
  	    		
 	    		break;	        		

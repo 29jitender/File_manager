@@ -4,12 +4,21 @@ package com.example.filemanager;
  import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.os.Build;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +34,7 @@ public class FileAdapter
     private ArrayList<FileObject> entries;   
     private Activity activity;             
 	private SparseBooleanArray mSelectedItemsIds;
+	private ArrayList<FileObject> arraylist;
 
      public FileAdapter(Activity a, int textViewResourceId, ArrayList<FileObject> entries) {
         super(a, textViewResourceId, entries);
@@ -32,6 +42,8 @@ public class FileAdapter
 
         this.entries = entries;
         this.activity = a;
+        this.arraylist = new ArrayList<FileObject>();
+        this.arraylist.addAll(entries);
     }
 
      public void toggleSelection(int position)
@@ -78,7 +90,7 @@ public class FileAdapter
          final FileObject file = entries.get(position);
          	Resources res = v.getResources();
 			 
-            ((ImageView)v.findViewById(R.id.icon)).setImageDrawable(getImageForExtension(file.getFile(), res));
+            ((ImageView)v.findViewById(R.id.icon)).setImageDrawable(getImageForExtension(file.getFile(), res,v));
 
         ((TextView)v.findViewById(R.id.fileName)).setText(file.getName());
 
@@ -100,10 +112,11 @@ public class FileAdapter
     }
      
      
-     public Drawable getImageForExtension(File file, Resources res) {
+     public Drawable getImageForExtension(File file, Resources res,View v) {
  		Drawable d = null;
  		String extension = "";
- 		
+			String filePath = file.getPath();
+
  		if (file.isDirectory()) {
  			d = res.getDrawable(R.drawable.folder);
  		} else {
@@ -124,11 +137,27 @@ public class FileAdapter
  					d = res.getDrawable(R.drawable.pdf);
  				} else if (extension.equals(".jpg")
  						|| extension.equals(".jpeg")) {
- 					d = res.getDrawable(R.drawable.image);
+   					
+ 
+ 					//d = res.getDrawable(R.drawable.image);
  				} else if (extension.equals(".xml")) {
  					d = res.getDrawable(R.drawable.xml);
  				} else if (extension.equals(".apk")) {
- 					d = res.getDrawable(R.drawable.android);
+ 					
+  			        PackageInfo packageInfo = getContext().getPackageManager().getPackageArchiveInfo(filePath, PackageManager.GET_ACTIVITIES);
+ 			        if(packageInfo != null) {
+ 			            ApplicationInfo appInfo = packageInfo.applicationInfo;
+ 			            if (Build.VERSION.SDK_INT >= 8) {
+ 			                appInfo.sourceDir = filePath;
+ 			                appInfo.publicSourceDir = filePath;
+ 			            }
+ 			            Drawable icon = appInfo.loadIcon(getContext().getPackageManager());
+ 			          		Bitmap bmpIcon = ((BitmapDrawable) icon).getBitmap();
+ 			          		d =new BitmapDrawable(bmpIcon); 
+ 			        }
+			 			        else{
+			 					d = res.getDrawable(R.drawable.android);
+			 			        }
  				} else {
  					d = res.getDrawable(R.drawable.none);
  				}
@@ -140,4 +169,26 @@ public class FileAdapter
 
  		return d;
  	}
+     
+ 	 // Filter Class
+     public void filter(String charText) {
+         charText = charText.toLowerCase(Locale.getDefault());
+          entries.clear();
+         if (charText.length() == 0) {
+        	 entries.addAll(arraylist);
+         } else {
+             for (FileObject wp : arraylist) {
+                 if (wp.getName().toLowerCase(Locale.getDefault())
+                         .contains(charText)) {
+                	 entries.add(wp);
+                 } 
+                 else if (wp.getpath().toLowerCase(Locale.getDefault())
+                         .contains(charText)) {
+                	 entries.add(wp);
+                 }
+                 
+             }
+         }
+         notifyDataSetChanged();
+     }
 }
