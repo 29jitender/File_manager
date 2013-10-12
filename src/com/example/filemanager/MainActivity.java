@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -142,11 +143,7 @@ public class MainActivity
 
   		    			    				String destcheck=dir_Path+"/"+filename;
  
-		    			    				if(destcheck.equals(sourcePath)){
-		    			    					
-		    					 	    		Toast.makeText(MainActivity.this, "Select other Directory", Toast.LENGTH_SHORT).show();
-
-		    			    				}
+		    			    				if(destcheck.equals(sourcePath)){}
 		    			    				else{
 		    			    				if(sourc_file.isDirectory()) //if its a directry
 		    			    			        {
@@ -252,11 +249,7 @@ public class MainActivity
 		    			    				File dest_file=new File(dir_Path+"/"+filename);
  		    			    				String destcheck=dir_Path+"/"+filename;
  
-		    			    				if(destcheck.equals(sourcePath)){
-		    					 	    		Toast.makeText(MainActivity.this, "Select other Directory", Toast.LENGTH_SHORT).show();
-
-		    			    					
-		    			    				}
+		    			    				if(destcheck.equals(sourcePath)){}
 		    			    				else{
 		    			    				  if(sourc_file.isDirectory()) //if its a directry
 		    			    			        {
