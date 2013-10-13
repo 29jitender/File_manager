@@ -126,25 +126,51 @@ public class FileAdapter
  				extension = "";
 
  			if (!extension.equals("")) {
- 				if (extension.equals(".mp3") || extension.equals(".amr")) {
- 					
- 					
+ 				if (extension.equals(".mp3") //music
+ 						|| extension.equals(".amr")
+ 						|| extension.equals(".wma")
+ 						|| extension.equals(".m4a")
+ 						|| extension.equals(".m4p")) {					
  					d = res.getDrawable(R.drawable.music);
- 				} else if (extension.equals(".mp4") || extension.equals(".avi")
- 						|| extension.equals(".mpg")) {
  					
+ 				} else if (extension.equals(".mp4") //video
+ 						|| extension.equals(".avi")
+ 						|| extension.equals(".3gp")
+ 						|| extension.equals(".wmv")
+ 						|| extension.equals(".mpg")) {
  					d = res.getDrawable(R.drawable.video);
- 				} else if (extension.equals(".pdf")) {
+ 				} else if (extension.equals(".pdf")) {//pdf
  					d = res.getDrawable(R.drawable.pdf);
- 				} else if (extension.equals(".jpg")
+ 				}else if (extension.equals(".doc")//doc
+ 						|| extension.equals(".docx")
+ 						|| extension.equals(".rtf")) {
+ 					d = res.getDrawable(R.drawable.word);
+ 				} else if (extension.equals(".xls")
+ 						|| extension.equals(".xlsx")) {//excel
+ 					d = res.getDrawable(R.drawable.excel);
+ 				} 
+ 				else if (extension.equals(".ppt")|| extension.equals(".pptx")) {//ppt
+ 					d = res.getDrawable(R.drawable.powerpoint);
+ 				} 
+ 				else if (extension.equals(".txt")) {//text
+ 					d = res.getDrawable(R.drawable.notepad);
+ 				} 
+ 				else if (extension.equals(".zip")
+ 						|| extension.equals(".rar")
+ 						|| extension.equals(".gzip")
+ 						|| extension.equals(".7z")
+
+ 						) {//archive                               
+ 					d = res.getDrawable(R.drawable.zip);
+ 				} 
+ 				
+ 				else if (extension.equals(".jpg")
  						|| extension.equals(".jpeg")
  						|| extension.equals(".png")
  						|| extension.equals(".gif")
  						|| extension.equals(".tif")
  						|| extension.equals(".tiff")) {
- 					 
- 				 
- 					
+ 					 	
  					d = res.getDrawable(R.drawable.image);
  				} else if (extension.equals(".xml")) {
  					d = res.getDrawable(R.drawable.xml);
@@ -162,13 +188,13 @@ public class FileAdapter
  			          		d =new BitmapDrawable(bmpIcon); 
  			        }
 			 			        else{
-			 					d = res.getDrawable(R.drawable.android);
+			 					d = res.getDrawable(R.drawable.ic_launcher);
 			 			        }
  				} else {
- 					d = res.getDrawable(R.drawable.none);
+ 					d = res.getDrawable(R.drawable.none);  //other
  				}
  			} else {
- 				d = res.getDrawable(R.drawable.none);
+ 				d = res.getDrawable(R.drawable.none);  //asdasdasdasd
  			}
 
  		}

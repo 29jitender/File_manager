@@ -51,7 +51,7 @@ public class MainActivity
     String dir_Path;      
     File[] file_list; //array of items
     FileAdapter Adapter = null;
-    
+    Boolean check_selected=false;
     //navigation 
     ListView list;
 	NavListAdapter adapter;
@@ -91,6 +91,11 @@ public class MainActivity
  		//getSupportActionBar().setDisplayShowTitleEnabled(false); 		
  		// Create the Navigation List in your ActionBar
  		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+ 		if(!dir_Path.equals(Environment.getExternalStorageDirectory().toString())){
+ 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);//not for home
+ 		}     //initial path
+ 
+ 	 		
 
  		// Listen to navigation list clicks
  		ActionBar.OnNavigationListener navlistener = new OnNavigationListener() {
@@ -649,12 +654,20 @@ public class MainActivity
  	    		break;
 	    		
 	    		
-//	    	case R.id.select:
-//	    		Log.i("count",listview.getChildCount()+"");
-//	    		for(int x=0;x< listview.getChildCount();x++){
-//	    			onListItemCheck(x);	    		}
-// 	    		
-//	    		break;
+	    	case R.id.selectall:
+	    		
+	    		if(check_selected){
+	    			
+	    			mActionMode.finish();//removing selected
+	    			check_selected=false;
+	    			}
+	    			else{
+			            mActionMode.finish();//removing selected
+			    		for(int x=0;x< file_list.length;x++){//adding again
+			    			onListItemCheck(x);	    		}
+			    		check_selected=true;
+	    			}
+	    		break;
 
 	    	}
 			
@@ -915,7 +928,23 @@ public class MainActivity
 	}
  
 	//defult menu
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+	     int itemId = item.getItemId();
+	     switch (itemId)
+	     {
+	         
+	         case android.R.id.home:
+	             Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+	             mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	             startActivity(mainIntent);
+	         default:
+	             break;
+	     }
+	 
+	     return true;
+	 }
 	
 
  } 

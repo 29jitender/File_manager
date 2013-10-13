@@ -913,7 +913,7 @@ containing a value of this type.
         public static final int abs__textfield_searchview_right_holo_dark=0x7f02006d;
         public static final int abs__textfield_searchview_right_holo_light=0x7f02006e;
         public static final int abs__toast_frame=0x7f02006f;
-        public static final int android=0x7f020070;
+        public static final int excel=0x7f020070;
         public static final int folder=0x7f020071;
         public static final int ic_copy=0x7f020072;
         public static final int ic_delete=0x7f020073;
@@ -924,18 +924,16 @@ containing a value of this type.
         public static final int ic_search_inverse=0x7f020078;
         public static final int ic_zip=0x7f020079;
         public static final int image=0x7f02007a;
-        public static final int left_arrow=0x7f02007b;
-        public static final int music=0x7f02007c;
-        public static final int none=0x7f02007d;
+        public static final int music=0x7f02007b;
+        public static final int none=0x7f02007c;
+        public static final int notepad=0x7f02007d;
         public static final int pdf=0x7f02007e;
-        public static final int right_arrow=0x7f02007f;
+        public static final int powerpoint=0x7f02007f;
         public static final int save=0x7f020080;
         public static final int video=0x7f020081;
-        public static final int viewas=0x7f020082;
+        public static final int word=0x7f020082;
         public static final int xml=0x7f020083;
-        public static final int zoom=0x7f020084;
-        public static final int zoom_in=0x7f020085;
-        public static final int zoom_out=0x7f020086;
+        public static final int zip=0x7f020084;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
@@ -977,12 +975,12 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040013;
         public static final int abs__title=0x7f04001b;
         public static final int abs__up=0x7f04000b;
-        public static final int action_settings=0x7f040047;
+        public static final int action_settings=0x7f040048;
         public static final int cancel=0x7f040034;
-        public static final int compress=0x7f040045;
-        public static final int copy=0x7f040041;
+        public static final int compress=0x7f040046;
+        public static final int copy=0x7f040042;
         public static final int copyormove=0x7f040036;
-        public static final int delet=0x7f040042;
+        public static final int delet=0x7f040044;
         public static final int disableHome=0x7f040009;
         public static final int editTextDialogUserInput=0x7f04003e;
         public static final int edit_query=0x7f040026;
@@ -1000,9 +998,10 @@ containing a value of this type.
         public static final int normal=0x7f040001;
         public static final int paste=0x7f040035;
         public static final int paste_layout=0x7f040033;
-        public static final int rename=0x7f040044;
-        public static final int search=0x7f040048;
-        public static final int share=0x7f040046;
+        public static final int rename=0x7f040045;
+        public static final int search=0x7f040049;
+        public static final int selectall=0x7f040041;
+        public static final int share=0x7f040047;
         public static final int showCustom=0x7f040008;
         public static final int showHome=0x7f040005;
         public static final int showTitle=0x7f040007;
