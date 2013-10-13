@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme" >
         
         <activity
-            android:name="com.example.filemanager.MainActivity"
+            android:name="com.example.filemanager.MainActivity"  android:uiOptions="splitActionBarWhenNarrow"
+             
             android:label="@string/app_name" 
              >
             <intent-filter>

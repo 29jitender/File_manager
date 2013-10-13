@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,18 +19,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
-import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -37,9 +41,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 
 public class MainActivity  
-        extends SherlockListActivity     
+        extends SherlockListActivity     implements ActionBar.OnNavigationListener 
   {	     public static ProgressDialog dialog ;//dialog
-
+   private String[] mLocations;
 	  RelativeLayout paste_layout=null;
 	  TextView copyormove;
 	  private ActionMode mActionMode;
@@ -51,6 +55,16 @@ public class MainActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
          setContentView(R.layout.activity_main);
+         //navigation
+         mLocations = getResources().getStringArray(R.array.locations);
+         Context context = getSupportActionBar().getThemedContext();
+         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.locations, R.layout.sherlock_spinner_item);
+         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+
+         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+         getSupportActionBar().setListNavigationCallbacks(list, this);
+         
+         ///
 	      paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
 
 	      copyormove =(TextView)findViewById(R.id.copyormove);
@@ -397,12 +411,15 @@ public class MainActivity
  			onListItemCheck(position);		
  	}
  	private void onListItemCheck(int position) {
+ 		
  		Adapter.toggleSelection(position);
         boolean hasCheckedItems = Adapter.getSelectedCount() > 0;        
 
         if (hasCheckedItems && mActionMode == null)
         	// there are some selected items, start the actionMode
-            mActionMode = startActionMode(new ActionModeCallback());
+        {  mActionMode = startActionMode(new ActionModeCallback());
+        openOptionsMenu(); 
+        }
         else if (!hasCheckedItems && mActionMode != null)
         	// there no selected items, finish the actionMode
             mActionMode.finish();
@@ -410,7 +427,8 @@ public class MainActivity
 
         if(mActionMode != null)
         	mActionMode.setTitle(String.valueOf(Adapter.getSelectedCount()) + " selected");
-    }
+        
+     }
  	
  	 public void onsingleclick(View view)
      {
@@ -453,7 +471,8 @@ public class MainActivity
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// inflate contextual menu	
-			mode.getMenuInflater().inflate(R.menu.contextual, menu);
+		 	mode.getMenuInflater().inflate(R.menu.contextual, menu);			 
+ 			
 			return true;
 		}
 
@@ -466,7 +485,7 @@ public class MainActivity
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			// retrieve selected items 
  			SparseBooleanArray selected = Adapter.getSelectedIds();
- 		    ArrayList<String> paths = new ArrayList<String>();
+ 		    final ArrayList<String> paths = new ArrayList<String>();
 
  			for (int i = 0; i < selected.size(); i++){				
 			    if (selected.valueAt(i)) {
@@ -486,20 +505,37 @@ public class MainActivity
 	    		break;
 	    	case R.id.delet:
 	    		
-	    			for(int i=0;i<paths.size();i++){
-	    				
-	    				String path=paths.get(i);
-	    				File file = new File(path);
-	    				DeleteRecursive(file);
-	    				
-	    				
-	    			}
+	    		
+	    		new AlertDialog.Builder(MainActivity.this)
+	            .setIcon(android.R.drawable.ic_dialog_alert)
+	            .setTitle("Delete")
+	            .setMessage("You sure you want to delete ?")
+	            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+	                @Override
+	                public void onClick(DialogInterface dialog, int which) {
+
+	                	for(int i=0;i<paths.size();i++){
+		    				
+		    				String path=paths.get(i);
+		    				File file = new File(path);
+		    				DeleteRecursive(file);
+		    				
+		    				
+		    			}
+		    			
+		    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+		    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
+		    			
+		    			Toast.makeText(MainActivity.this, "Successfully Deleted", Toast.LENGTH_LONG).show();
+		    			refresh_activity();    
+	                }
+
+	            })
+	            .setNegativeButton("Cancel", null)
+	            .show();
+	    		
 	    			
-	    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-	    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
-	    			
-	    			Toast.makeText(MainActivity.this, "Successfully Deleted", Toast.LENGTH_LONG).show();
-	    			refresh_activity();
 	    		
 	    		break;
 	    	case R.id.move:
@@ -512,7 +548,35 @@ public class MainActivity
 
  	    		
 	    		break;	        		
-	   		
+	    	case R.id.rename:
+	    		 
+	    		for(int i=(paths.size()-1);i>=0;i--){
+    				
+    				String path=paths.get(i);
+    				File file = new File(path);
+    				if(i==(paths.size()-1)){
+    					renamefile(file,true);	
+    				}
+    				else{
+    					renamefile(file,false);
+    				}
+    				
+   	    		}
+
+	    		break;	
+		    	case R.id.compress:
+		    		compress_function(paths);
+	    		break;
+	    		
+	    		
+	    		
+	    		
+//	    	case R.id.select:
+//	    		Log.i("count",listview.getChildCount()+"");
+//	    		for(int x=0;x< listview.getChildCount();x++){
+//	    			onListItemCheck(x);	    		}
+// 	    		
+//	    		break;
 
 	    	}
 			
@@ -522,6 +586,134 @@ public class MainActivity
 			mode.finish();
 			return false;
 		}
+		
+		
+		public void compress_function(final ArrayList<String> paths){
+			LayoutInflater li = LayoutInflater.from(MainActivity.this);
+			View promptsView = li.inflate(R.layout.prompts, null);
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					MainActivity.this);
+
+			// set prompts.xml to alertdialog builder
+			alertDialogBuilder.setView(promptsView);
+
+			final EditText userInput = (EditText) promptsView
+					.findViewById(R.id.editTextDialogUserInput);
+			final TextView msg = (TextView) promptsView
+					.findViewById(R.id.msg_text);
+			msg.setText("Give a name to zip ");
+
+			// set dialog message
+			alertDialogBuilder
+				.setCancelable(false)
+				.setPositiveButton("OK",
+				  new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog,int id) {
+
+				    	File first = new File(paths.get(0));
+				    	if(!userInput.getText().toString().equals("")){// only do if user has enterd something
+				    		Compress obj =new Compress(paths, first.getParent()+"/"+userInput.getText()+".zip");
+				    		obj.zip(); 
+				    	}
+			    		
+ 			            	  
+ 			              	 
+				    	
+				    }
+				  })
+				.setNegativeButton("Cancel",
+				  new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog,int id) {
+				    	
+				    	 	  
+ 			              
+					dialog.cancel();
+				    }
+				  });
+			
+			// create alert dialog
+						AlertDialog alertDialog = alertDialogBuilder.create();
+
+						// show it
+						alertDialog.show();
+			
+		}
+		
+		public void renamefile(final File from,final Boolean last_file){
+			LayoutInflater li = LayoutInflater.from(MainActivity.this);
+			View promptsView = li.inflate(R.layout.prompts, null);
+			final String parentname=from.getParent();
+			final String file_name=from.getName();
+			String filePath = from.getPath();
+
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					MainActivity.this);
+
+			// set prompts.xml to alertdialog builder
+			alertDialogBuilder.setView(promptsView);
+
+			final EditText userInput = (EditText) promptsView
+					.findViewById(R.id.editTextDialogUserInput);
+			final TextView msg = (TextView) promptsView
+					.findViewById(R.id.msg_text);
+			msg.setText("Rename: "+file_name);
+
+			// set dialog message
+			alertDialogBuilder
+				.setCancelable(false)
+				.setPositiveButton("OK",
+				  new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog,int id) {
+
+				    	  String extension = "";//gettin extension
+				    	  int dotPos = file_name.lastIndexOf(".");
+				    	  if( dotPos != -1 )
+			 				extension = file_name.substring(dotPos);
+				    	  else
+			 				extension = "";
+
+			 			 
+				    	File from = new File(parentname,file_name);
+				    	if(!userInput.getText().toString().equals("")){// only do if user has enterd something
+ 
+				    	File to = new File(parentname,userInput.getText()+""+extension);
+ 				    	from.renameTo(to);
+ 				    	sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+ 		    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
+ 				    	if(last_file){
+ 			            	refresh_activity();
+			 	    		//Toast.makeText(MainActivity.this, from.getName(), Toast.LENGTH_SHORT).show();
+
+ 			            }  
+				    	}
+				    	
+ 			            	  
+ 			              	 
+				    	
+				    }
+				  })
+				.setNegativeButton("Cancel",
+				  new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog,int id) {
+				    	
+				    	if(last_file){
+ 			            	//refresh_activity();
+			 	    		//Toast.makeText(MainActivity.this, from.getName(), Toast.LENGTH_SHORT).show();
+
+ 			            }  		  
+ 			              
+					dialog.cancel();
+				    }
+				  });
+
+			// create alert dialog
+			AlertDialog alertDialog = alertDialogBuilder.create();
+
+			// show it
+			alertDialog.show();
+
+		}
+		
 		
 		public void DeleteRecursive(File fileOrDirectory) {
 		    if (fileOrDirectory.isDirectory())
@@ -538,6 +730,7 @@ public class MainActivity
 		}
 		
 	}
+  
  	public  void refresh_activity(){
 		Intent intent = getIntent();
 		    finish();
@@ -562,21 +755,38 @@ public class MainActivity
 	}
 	@Override
 	public void onBackPressed() {
-//		String sdcard = Environment.getExternalStorageDirectory().toString();     //initial path
-//		if(dir_Path.equals(sdcard)){
-//				finish();
-//		}else{
+		
+		
+		
+		String sdcard = Environment.getExternalStorageDirectory().toString();     //initial path
+		if(dir_Path.equals(sdcard)){
+			File_move.path_list = null; //removing list
+
+				finish();
+		}else{
 //		int lastslashPosition = dir_Path.lastIndexOf('/');
 //
 //		Intent next = new Intent(MainActivity.this, MainActivity.class);
 //        next.putExtra("path", dir_Path.subSequence(0, lastslashPosition));//putting path
 //         startActivity(next); //starting it again with new path and show that again
 //		    overridePendingTransition(0,0);
-//
-//		}
+
+		}
  		super.onBackPressed();
 	}
+
+
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		
+ 		Toast.makeText(MainActivity.this, "Selected: " + mLocations[itemPosition], Toast.LENGTH_SHORT).show();
+
+ 		return true;
+	}
  
+	//defult menu
+	
+	
 
  } 
  

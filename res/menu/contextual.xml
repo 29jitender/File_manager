@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:id="@+id/copy"
-        android:title="Copy">
-    </item>
-<item
-        android:id="@+id/delet"
-        android:title="Delete">
-    </item>
-    <item
-        android:id="@+id/move"
-        android:title="Move">
-    </item>
+	  
+	    <group android:id="@+id/group1"
+	        android:title="co">
+	          <item
+	        android:id="@+id/copy"
+	        android:title="Copy"
+	        android:icon="@drawable/ic_copy"
+	        android:showAsAction="always"
+	        
+ 	         >
+	    </item>
+	<item
+	        android:id="@+id/delet"
+	        android:title="Delete"
+	        android:icon="@drawable/ic_delete"
+	        android:showAsAction="always"
+ 	        >
+	    </item>
+	    <item
+	        android:id="@+id/move"
+	        android:title="Move"
+	        android:icon="@drawable/ic_move"
+	        android:showAsAction="always"
+ 	        >
+	    </item>
+	    <item
+	        android:id="@+id/rename"
+	        android:title="Rename"
+	        android:icon="@drawable/ic_rename"
+	        android:showAsAction="always"
+ 	        >
+	    </item>
+	    
+	     <item
+	        android:id="@+id/compress"
+	        android:title="compress"
+	        android:icon="@drawable/ic_zip"
+	        android:showAsAction="always"
+ 	        >
+	    </item>
+	      
+ 	    </group>
  
 </menu> 

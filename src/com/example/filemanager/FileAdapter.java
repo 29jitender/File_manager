@@ -127,9 +127,12 @@ public class FileAdapter
 
  			if (!extension.equals("")) {
  				if (extension.equals(".mp3") || extension.equals(".amr")) {
+ 					
+ 					
  					d = res.getDrawable(R.drawable.music);
  				} else if (extension.equals(".mp4") || extension.equals(".avi")
  						|| extension.equals(".mpg")) {
+ 					
  					d = res.getDrawable(R.drawable.video);
  				} else if (extension.equals(".pdf")) {
  					d = res.getDrawable(R.drawable.pdf);

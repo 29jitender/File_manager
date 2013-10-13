@@ -7,4 +7,6 @@
     <string name="title_activity_view_pdf">View_pdf</string>
 	  <string name="ok">&#xF00C;</string>
     <string name="cancel">&#xF00D;</string>
+        <string name="copyl">&#xF15B;</string>
+    
 </resources>
