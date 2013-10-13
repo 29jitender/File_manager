@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,13 +18,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -34,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -41,9 +41,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 
 public class MainActivity  
-        extends SherlockListActivity     implements ActionBar.OnNavigationListener 
+        extends SherlockListActivity     
   {	     public static ProgressDialog dialog ;//dialog
-   private String[] mLocations;
+
 	  RelativeLayout paste_layout=null;
 	  TextView copyormove;
 	  private ActionMode mActionMode;
@@ -51,30 +51,87 @@ public class MainActivity
     String dir_Path;      
     File[] file_list; //array of items
     FileAdapter Adapter = null;
+    
+    //navigation 
+    ListView list;
+	NavListAdapter adapter;
+	 
+	ArrayList<String> title;
+    
+    ///
      @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
-         setContentView(R.layout.activity_main);
-         //navigation
-         mLocations = getResources().getStringArray(R.array.locations);
-         Context context = getSupportActionBar().getThemedContext();
-         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.locations, R.layout.sherlock_spinner_item);
-         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-
-         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-         getSupportActionBar().setListNavigationCallbacks(list, this);
-         
-         ///
-	      paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
-
-	      copyormove =(TextView)findViewById(R.id.copyormove);
-
-        listview = getListView();     
+         ////////////////navigation
         dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
         try {                   
             dir_Path = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
 
+          title = new ArrayList<String>();
+
+        
+        	String temp_path=dir_Path;//removing sd card path  .replace(Environment.getExternalStorageDirectory().toString(), "")
+        	
+        	while(temp_path.contains("/")){
+        		int lastslashPosition = temp_path.lastIndexOf('/');        		
+        		title.add(temp_path.subSequence(lastslashPosition+1, temp_path.length()).toString());         		
+        		temp_path =temp_path.subSequence(0, lastslashPosition).toString();        		
+
+        		
+        	}
+        
+     	// Generate title
+ 		
+ 		 
+ 		 	 
+
+  		adapter = new NavListAdapter(this, title); 		
+ 		// Hide the ActionBar Title
+ 		//getSupportActionBar().setDisplayShowTitleEnabled(false); 		
+ 		// Create the Navigation List in your ActionBar
+ 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+ 		// Listen to navigation list clicks
+ 		ActionBar.OnNavigationListener navlistener = new OnNavigationListener() {
+
+ 			@Override
+ 			public boolean onNavigationItemSelected(int position, long itemId) {
+ 				 StringBuffer sb = new StringBuffer("");
+ 				 if(position!=0){
+   				for(int i=(title.size()-1);i>=position;i--){
+  					sb.append("/"+title.get(i));
+  					
+  					
+  				} 
+    				Intent next = new Intent(MainActivity.this, MainActivity.class);
+   				next.putExtra("path", sb.toString());//putting path
+   		        next.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+
+   				finish();
+   				startActivity(next); //starting it again with new path and show that again
+   			    overridePendingTransition(0,0);
+ 				 }
+  				return true;
+ 			}
+
+ 		};
+ 		// Set the NavListAdapter into the ActionBar Navigation
+ 		getSupportActionBar().setListNavigationCallbacks(adapter, navlistener);
+         
+         
+         ////////////
+         
+        setContentView(R.layout.activity_main);
+
+         
+         
+	      paste_layout =(RelativeLayout)findViewById(R.id.paste_layout);
+	      
+	      copyormove =(TextView)findViewById(R.id.copyormove);
+
+        listview = getListView();     
+       
          
          
          
@@ -109,7 +166,7 @@ public class MainActivity
  				return true;
  			}
  		});
-         setTitle(dir_Path);//setting title 
+       //  setTitle(dir_Path);//setting title 
     }
 
 
@@ -442,7 +499,9 @@ public class MainActivity
           
           Intent next = new Intent(MainActivity.this, MainActivity.class);
           next.putExtra("path", path);//putting path
-         // finish();
+           finish();
+          next.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+
           startActivity(next); //starting it again with new path and show that again 
  		    overridePendingTransition(0,0);
 
@@ -460,7 +519,8 @@ public class MainActivity
           String type = mime.getMimeTypeFromExtension(ext);  //
          
            intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
-          startActivity(intent);
+          
+           startActivity(intent);
           
       }
      }
@@ -513,22 +573,38 @@ public class MainActivity
 	            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
 	                @Override
-	                public void onClick(DialogInterface dialog, int which) {
+	                public void onClick(DialogInterface dialog11, int which) {
 
-	                	for(int i=0;i<paths.size();i++){
-		    				
-		    				String path=paths.get(i);
-		    				File file = new File(path);
-		    				DeleteRecursive(file);
-		    				
-		    				
-		    			}
-		    			
-		    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-		    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
-		    			
-		    			Toast.makeText(MainActivity.this, "Successfully Deleted", Toast.LENGTH_LONG).show();
-		    			refresh_activity();    
+	                	
+	                	dialog.setMessage("Deleting please wait");
+    					dialog.show();
+    					
+    					Thread thread = new Thread()
+    					{
+    					    @Override
+    					    public void run() {
+    					    	for(int i=0;i<paths.size();i++){
+    			    				
+    			    				String path=paths.get(i);
+    			    				File file = new File(path);
+    			    				DeleteRecursive(file);
+    			    				
+    			    				
+    			    			}
+    			    			
+    			    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+    			    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
+		    					dialog.dismiss();
+
+     			    			refresh_activity();    
+    					        }
+    					    
+    					};
+
+    					thread.start();
+    					               	
+	                	
+	                	
 	                }
 
 	            })
@@ -568,7 +644,9 @@ public class MainActivity
 		    		compress_function(paths);
 	    		break;
 	    		
-	    		
+		    	case R.id.share:
+		    		share_file(paths);
+ 	    		break;
 	    		
 	    		
 //	    	case R.id.select:
@@ -586,7 +664,24 @@ public class MainActivity
 			mode.finish();
 			return false;
 		}
-		
+		public void share_file(ArrayList<String> paths){
+			ArrayList<Uri> imageUris = new ArrayList<Uri>();
+    		for(int i=0;i<paths.size();i++){
+    			
+    			imageUris.add(Uri.fromFile(new File(paths.get(i)))); 
+    		}
+    			File file =new File(paths.get(0));
+    		  MimeTypeMap mime = MimeTypeMap.getSingleton();// this is used to open files
+              String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
+              String type = mime.getMimeTypeFromExtension(ext);  //
+    		//paths
+    		Intent shareIntent = new Intent();
+    		shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+    		shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+    		shareIntent.setType(type);
+    		startActivity(Intent.createChooser(shareIntent, "Share"));
+			
+		}
 		
 		public void compress_function(final ArrayList<String> paths){
 			LayoutInflater li = LayoutInflater.from(MainActivity.this);
@@ -608,13 +703,54 @@ public class MainActivity
 				.setCancelable(false)
 				.setPositiveButton("OK",
 				  new DialogInterface.OnClickListener() {
-				    public void onClick(DialogInterface dialog,int id) {
+				    public void onClick(DialogInterface dialog11,int id) {
+				    	dialog.setMessage("Compressing please wait.");
+    					dialog.show();
+    					
+    					Thread thread = new Thread()
+    					{
+    					    @Override
+    					    public void run() {
+    					    	File first = new File(paths.get(0));
+    					    	Boolean check=false;
+    					    	
+    					    	for(int i=0;i<file_list.length;i++){
+    					    		int lastslashPosition = file_list[i].getPath().lastIndexOf('/');        		
+    				        		String name =file_list[i].getPath().subSequence(lastslashPosition+1, file_list[i].getPath().length()).toString();
+     				        		if(name.equals(userInput.getText().toString()+".zip")){
+      				        			check=true;
+     					    		}
+    					    		
+    					    	}
+    					    	Log.i("matched",check+"");
+    					    	if(!userInput.getText().toString().equals("")){// only do if user has enterd something
+    					    		if(check){
+ 
+    			    					dialog.dismiss();
 
-				    	File first = new File(paths.get(0));
-				    	if(!userInput.getText().toString().equals("")){// only do if user has enterd something
-				    		Compress obj =new Compress(paths, first.getParent()+"/"+userInput.getText()+".zip");
-				    		obj.zip(); 
-				    	}
+    					    		}
+    					    		else{
+    					    		Compress obj =new Compress(paths, first.getParent()+"/"+userInput.getText()+".zip");
+    					    		//obj.zip(); 
+    					    		if(obj.zip()){
+    					    			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+    	    			    					Uri.parse("file://" + Environment.getExternalStorageDirectory())));//refreshing
+    			    					dialog.dismiss();
+    					    			refresh_activity();
+    					    		}}
+    					    		
+    					    	}
+    					    	else{
+ 			    					dialog.dismiss();
+
+    					    	}
+    					        }
+    					    
+    					};
+
+    					thread.start();
+    					
+				    	
 			    		
  			            	  
  			              	 
@@ -764,24 +900,18 @@ public class MainActivity
 
 				finish();
 		}else{
-//		int lastslashPosition = dir_Path.lastIndexOf('/');
-//
-//		Intent next = new Intent(MainActivity.this, MainActivity.class);
-//        next.putExtra("path", dir_Path.subSequence(0, lastslashPosition));//putting path
-//         startActivity(next); //starting it again with new path and show that again
-//		    overridePendingTransition(0,0);
+		int lastslashPosition = dir_Path.lastIndexOf('/');
+
+		Intent next = new Intent(MainActivity.this, MainActivity.class);
+		
+        next.putExtra("path", dir_Path.subSequence(0, lastslashPosition));//putting path
+        next.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+
+        startActivity(next); //starting it again with new path and show that again
+		    overridePendingTransition(0,0);
 
 		}
  		super.onBackPressed();
-	}
-
-
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		
- 		Toast.makeText(MainActivity.this, "Selected: " + mLocations[itemPosition], Toast.LENGTH_SHORT).show();
-
- 		return true;
 	}
  
 	//defult menu

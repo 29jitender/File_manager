@@ -25,7 +25,7 @@ public class Compress {
 	    _zipFile = zipFile; 
 	  } 
 	 
-	  public void zip() { 
+	  public Boolean zip() { 
 	    try  { 
 	      BufferedInputStream origin = null; 
 	      FileOutputStream dest = new FileOutputStream(_zipFile); 
@@ -68,7 +68,8 @@ public class Compress {
 	      out.close(); 
 	    } catch(Exception e) { 
 	      e.printStackTrace(); 
-	    } 
+	    }
+		return true; 
 	 
 	  } 
 	 

@@ -35,8 +35,15 @@
 	    
 	     <item
 	        android:id="@+id/compress"
-	        android:title="compress"
+	        android:title="Compress"
 	        android:icon="@drawable/ic_zip"
+	        android:showAsAction="always"
+ 	        >
+	    </item>
+	     <item
+	        android:id="@+id/share"
+	        android:title="Share"
+	        android:icon="@drawable/ic_launcher"
 	        android:showAsAction="always"
  	        >
 	    </item>
