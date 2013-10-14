@@ -1,10 +1,12 @@
  
-package com.example.filemanager;      
+package com.qaffeinate.cask;      
 
  import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+
+import com.example.filemanager.R;
 
 import android.app.Activity;
 import android.content.Context;

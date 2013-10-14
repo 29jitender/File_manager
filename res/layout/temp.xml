@@ -38,7 +38,7 @@
         android:visibility="gone"
         android:background="#171c23">
 
-           <com.example.filemanager.Icon_font_button
+           <com.qaffeinate.cask.Icon_font_button
                android:id="@+id/cancel"
                style="?android:attr/buttonStyleSmall"
                android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                android:textSize="20dp"
             android:background="#fff" />
 
-           <com.example.filemanager.Icon_font_button
+           <com.qaffeinate.cask.Icon_font_button
             android:id="@+id/paste"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"

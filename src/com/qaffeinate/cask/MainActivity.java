@@ -1,4 +1,4 @@
-package com.example.filemanager;      
+package com.qaffeinate.cask;      
 
  
 import java.io.File;
@@ -38,6 +38,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.example.filemanager.R;
 
 
 public class MainActivity  
