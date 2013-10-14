@@ -58,7 +58,13 @@
 	        android:showAsAction="collapseActionView"
  	        >
 	    </item>
-	      
+	       <item
+	        android:id="@+id/newfolder"
+	        android:title="Create Folder"
+	        android:icon="@drawable/ic_action_collection"
+	        android:showAsAction="collapseActionView"
+ 	        >
+	    </item>
  	    </group>
  
 </menu> 

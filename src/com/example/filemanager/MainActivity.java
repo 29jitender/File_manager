@@ -532,7 +532,7 @@ public class MainActivity
             .setTitle("No Appication can perform this action")
             .setNeutralButton("OK", new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog, int button){
-                    onBackPressed();// on press ok come back to home
+                   // onBackPressed();// on press ok come back to home
 
                 	}
             })
@@ -665,7 +665,11 @@ public class MainActivity
 		    	case R.id.share:
 		    		share_file(paths);
  	    		break;
-	    		
+		    	case R.id.newfolder:
+		    			
+		    			create_folder(paths.get(0));
+
+		    	break;
 	    		
 	    	case R.id.selectall:
 	    		
@@ -690,6 +694,66 @@ public class MainActivity
 			mode.finish();
 			return false;
 		}
+		
+		
+		public void create_folder(String path){			
+			final File current_dir =new File(path);
+			
+			LayoutInflater li = LayoutInflater.from(MainActivity.this);
+			View promptsView = li.inflate(R.layout.prompts, null);
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					MainActivity.this);
+ 			alertDialogBuilder.setView(promptsView);
+
+			final EditText userInput = (EditText) promptsView
+					.findViewById(R.id.editTextDialogUserInput);
+			final TextView msg = (TextView) promptsView
+					.findViewById(R.id.msg_text);
+			msg.setText("Please enter folder name: ");
+
+			// set dialog message
+			alertDialogBuilder
+				.setCancelable(false)
+				.setPositiveButton("OK",
+				  new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog11,int id) {
+				     
+				    	 File dir = new File(current_dir.getParent()+"/"+userInput.getText().toString());
+							
+				    	 	try{
+							  if(dir.mkdir()) {
+								  refresh_activity();
+								  
+							  } else {
+					 	    		Toast.makeText(MainActivity.this, "Oops!! Something went wrong", Toast.LENGTH_SHORT).show();
+							  }
+							}catch(Exception e){
+							  e.printStackTrace();
+							}
+				    	
+				    }
+				  })
+				.setNegativeButton("Cancel",
+				  new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog,int id) {
+				    	
+				    	 	  
+ 			              
+					dialog.cancel();
+				    }
+				  });
+			
+ 						AlertDialog alertDialog = alertDialogBuilder.create();
+
+ 						alertDialog.show();
+			
+			 
+ 			
+		}
+		
+		
+		
+		
 		public void share_file(ArrayList<String> paths){
 			ArrayList<Uri> imageUris = new ArrayList<Uri>();
     		for(int i=0;i<paths.size();i++){
