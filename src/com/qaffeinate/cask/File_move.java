@@ -14,5 +14,5 @@ public class File_move {
 	}
 	public void setmove(Boolean move){
 		this.move=move;
-	}
+	}   
 }

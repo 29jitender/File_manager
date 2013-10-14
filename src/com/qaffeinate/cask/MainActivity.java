@@ -199,7 +199,12 @@ public class MainActivity
 		    		
 		    	}
 		    
-		    	
+		    	cancel.setOnClickListener(new View.OnClickListener(){
+		    		public void onClick(View View3) {
+		    			File_move.path_list = null; //removing list
+				    	paste_layout.setVisibility(View.GONE);
+
+			    		} });
 		    	paste.setOnClickListener(new View.OnClickListener(){
 		    		public void onClick(View View3) {
 		    			

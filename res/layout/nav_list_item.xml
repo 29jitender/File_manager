@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:textColor="#fff"
-        android:layout_margin="10dp"
-                    android:textSize="18sp"
+        android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
         
         android:singleLine="true" />
 
