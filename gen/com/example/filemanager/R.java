@@ -1099,8 +1099,6 @@ containing a value of this type.
         public static final int copyl=0x7f090013;
         public static final int hello_world=0x7f09000f;
         public static final int ok=0x7f090011;
-        public static final int title_activity_main_activity1=0x7f090015;
-        public static final int title_activity_main_activity1212=0x7f090014;
         public static final int title_activity_view_pdf=0x7f090010;
     }
     public static final class style {

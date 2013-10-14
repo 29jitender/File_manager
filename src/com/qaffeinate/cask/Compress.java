@@ -22,7 +22,7 @@ public class Compress {
 	    _files = files; 
 	    _zipFile = zipFile; 
 	  } 
-	    
+	        
 	  public Boolean zip() { 
 	    try  { 
 	      BufferedInputStream origin = null; 
