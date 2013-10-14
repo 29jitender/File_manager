@@ -1,4 +1,4 @@
-package com.example.filemanager;      
+package com.qaffeinate.cask;      
 
 import android.content.Context;
 import android.graphics.Typeface;

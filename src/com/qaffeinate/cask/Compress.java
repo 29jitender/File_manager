@@ -1,4 +1,4 @@
-package com.example.filemanager;
+package com.qaffeinate.cask;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,7 +22,7 @@ public class Compress {
 	    _files = files; 
 	    _zipFile = zipFile; 
 	  } 
-	 
+	    
 	  public Boolean zip() { 
 	    try  { 
 	      BufferedInputStream origin = null; 

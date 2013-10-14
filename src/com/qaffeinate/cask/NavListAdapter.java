@@ -1,6 +1,8 @@
-package com.example.filemanager;
+package com.qaffeinate.cask;
 
 import java.util.ArrayList;
+
+import com.example.filemanager.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

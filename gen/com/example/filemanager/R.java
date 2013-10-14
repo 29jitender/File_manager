@@ -977,7 +977,7 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040013;
         public static final int abs__title=0x7f04001b;
         public static final int abs__up=0x7f04000b;
-        public static final int action_settings=0x7f040048;
+        public static final int action_settings=0x7f040049;
         public static final int cancel=0x7f040034;
         public static final int compress=0x7f040046;
         public static final int copy=0x7f040042;
@@ -997,11 +997,12 @@ containing a value of this type.
         public static final int listMode=0x7f040002;
         public static final int move=0x7f040043;
         public static final int msg_text=0x7f04003d;
+        public static final int newfolder=0x7f040048;
         public static final int normal=0x7f040001;
         public static final int paste=0x7f040035;
         public static final int paste_layout=0x7f040033;
         public static final int rename=0x7f040045;
-        public static final int search=0x7f040049;
+        public static final int search=0x7f04004a;
         public static final int selectall=0x7f040041;
         public static final int share=0x7f040047;
         public static final int showCustom=0x7f040008;
@@ -1098,6 +1099,8 @@ containing a value of this type.
         public static final int copyl=0x7f090013;
         public static final int hello_world=0x7f09000f;
         public static final int ok=0x7f090011;
+        public static final int title_activity_main_activity1=0x7f090015;
+        public static final int title_activity_main_activity1212=0x7f090014;
         public static final int title_activity_view_pdf=0x7f090010;
     }
     public static final class style {
