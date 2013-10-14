@@ -5,8 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_view_pdf">View_pdf</string>
-	  <string name="ok">&#xF00C;</string>
+    <string name="ok">&#xF00C;</string>
     <string name="cancel">&#xF00D;</string>
-        <string name="copyl">&#xF15B;</string>
-    
+    <string name="copyl">&#xF15B;</string>
+    <string name="title_activity_test">Test</string>
+
 </resources>
