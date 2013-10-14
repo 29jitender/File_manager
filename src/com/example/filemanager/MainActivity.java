@@ -516,16 +516,29 @@ public class MainActivity
           Intent intent = new Intent();
           //using a builtin Intent.
 
-           intent.setAction(android.content.Intent.ACTION_VIEW);
+           try {
+			intent.setAction(android.content.Intent.ACTION_VIEW);
 
-           File file = new File(path); // defining file
-          MimeTypeMap mime = MimeTypeMap.getSingleton();// this is used to open files
-          String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
-          String type = mime.getMimeTypeFromExtension(ext);  //
-         
-           intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
-          
-           startActivity(intent);
+			   File file = new File(path); // defining file
+			  MimeTypeMap mime = MimeTypeMap.getSingleton();// this is used to open files
+			  String ext=file.getName().substring(file.getName().lastIndexOf(".")+1); //getting the extension after .
+			  String type = mime.getMimeTypeFromExtension(ext);  //
+			 
+			   intent.setDataAndType(Uri.fromFile(file),type);//when we have mime will put this in intent to open the file
+			  
+			   startActivity(intent);
+		} catch (Exception e) {
+			new AlertDialog.Builder(this)//opening a dialog box wiht msg
+            .setTitle("No Appication can perform this action")
+            .setNeutralButton("OK", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int button){
+                    onBackPressed();// on press ok come back to home
+
+                	}
+            })
+            .show();	
+			e.printStackTrace();
+		}
           
       }
      }

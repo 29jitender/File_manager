@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import android.util.Log;
-
 public class Compress { 
 	  private static final int BUFFER = 2048; 
 	 
