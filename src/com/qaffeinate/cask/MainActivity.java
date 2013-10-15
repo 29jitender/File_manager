@@ -38,7 +38,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.example.filemanager.R;
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 public class MainActivity  
@@ -64,7 +64,13 @@ public class MainActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);           
          ////////////////navigation
-        dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
+        try {
+			dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
+		} catch (Exception e1) {
+			dir_Path="/";//if there is no sd card
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         try {                   
             dir_Path = getIntent().getExtras().getString("path");//get the path from intent
         } catch(NullPointerException e) {}
@@ -1028,7 +1034,20 @@ public class MainActivity
 	 
 	     return true;
 	 }
+	///google analytics
 	
+	
+	 @Override
+	  public void onStart() {
+	    super.onStart();
+ 	    EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+	  }
+
+	  @Override
+	  public void onStop() {
+	    super.onStop();
+ 	    EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+	  }
 
  } 
  

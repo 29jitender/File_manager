@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-import com.example.filemanager.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

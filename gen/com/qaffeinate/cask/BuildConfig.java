@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.example.filemanager;
+package com.qaffeinate.cask;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;
