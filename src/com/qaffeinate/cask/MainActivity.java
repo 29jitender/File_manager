@@ -39,6 +39,7 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 
 public class MainActivity  
@@ -56,13 +57,14 @@ public class MainActivity
     //navigation 
     ListView list;
 	NavListAdapter adapter;
-	 
+	  EasyTracker easyTracker;
 	ArrayList<String> title;
     
     ///
      @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);           
+        super.onCreate(savedInstanceState);  
+        easyTracker = EasyTracker.getInstance(this);//google analytics
          ////////////////navigation
         try {
 			dir_Path = Environment.getExternalStorageDirectory().toString();     //initial path
@@ -109,6 +111,13 @@ public class MainActivity
 
  			@Override
  			public boolean onNavigationItemSelected(int position, long itemId) {
+ 				////////google analytics
+ 				
+ 				googleanalytics_event("ui_action", "button_click", "Navigation");
+ 				
+ 				////////////////
+ 				
+ 				
  				 StringBuffer sb = new StringBuffer("");
  				 if(position!=0){
    				for(int i=(title.size()-1);i>=position;i--){
@@ -159,6 +168,8 @@ public class MainActivity
              .setTitle("Need root permission to open this")
              .setNeutralButton("OK", new DialogInterface.OnClickListener(){
                  public void onClick(DialogInterface dialog, int button){
+                	 googleanalytics_event("Root permission", "button_click", "Pressed ok");
+                	 
                      onBackPressed();// on press ok come back to home
 
                  	}
@@ -181,7 +192,17 @@ public class MainActivity
        //  setTitle(dir_Path);//setting title 
     }
 
-
+public void googleanalytics_event (String category,String action,String lable){
+	easyTracker.send(MapBuilder
+		      .createEvent(category,     // Event category (required)
+		                   action,  // Event action (required)
+		                   lable,   // Event label
+		                   null)            // Event value
+		      .build()
+		  );
+	
+}
+     
      @Override
 	protected void onResume() {
 	      dialog=new ProgressDialog(MainActivity.this);	
@@ -207,6 +228,7 @@ public class MainActivity
 		    
 		    	cancel.setOnClickListener(new View.OnClickListener(){
 		    		public void onClick(View View3) {
+		    			googleanalytics_event("Copy or move", "button_click", "cancel");
 		    			File_move.path_list = null; //removing list
 				    	paste_layout.setVisibility(View.GONE);
 
@@ -215,6 +237,7 @@ public class MainActivity
 		    		public void onClick(View View3) {
 		    			
 		    			if(File_move.move){
+			    			googleanalytics_event("Copy or move", "button_click", "move done");
 		    				 class file_move_async extends AsyncTask<Void, Void, Integer> {
 		    			    	 
 		    			         protected Integer doInBackground(Void... params) {
@@ -321,6 +344,8 @@ public class MainActivity
 		    				 
 		    				 
 		    			}	else{	    	
+			    			googleanalytics_event("Copy or move", "button_click", "copy done");
+
  		    					class Copy_file_async extends AsyncTask<Void, Void, Integer> {
 		    			    	 
 		    			         protected Integer doInBackground(Void... params) {
@@ -421,6 +446,8 @@ public class MainActivity
 			    		} });
 		    	paste.setOnClickListener(new View.OnClickListener(){
 		    		public void onClick(View View3) {
+		    			googleanalytics_event("Copy or move", "button_click", "same directory");
+
 		 	    		Toast.makeText(MainActivity.this, "Select other Directory", Toast.LENGTH_SHORT).show();
 
 
@@ -585,6 +612,8 @@ public class MainActivity
 			
 			switch(item.getItemId()){
 	    	case R.id.copy:
+		    	googleanalytics_event("CAB options", "button_click", "Copy");
+
 	    		File_move send_path = new File_move();
 	    		send_path.setpath(paths);
 	    		send_path.setmove(false);
@@ -594,7 +623,7 @@ public class MainActivity
 		    	copyormove.setText("Copy here");
 	    		break;
 	    	case R.id.delet:
-	    		
+	    		googleanalytics_event("CAB options", "button_click", "Delete");
 	    		
 	    		new AlertDialog.Builder(MainActivity.this)
 	            .setIcon(android.R.drawable.ic_dialog_alert)
@@ -605,7 +634,7 @@ public class MainActivity
 	                @Override
 	                public void onClick(DialogInterface dialog11, int which) {
 
-	                	
+	                	googleanalytics_event("Delete", "button_click", "deleted");
 	                	dialog.setMessage("Deleting please wait");
     					dialog.show();
     					
@@ -645,6 +674,7 @@ public class MainActivity
 	    		
 	    		break;
 	    	case R.id.move:
+	    		googleanalytics_event("CAB options", "button_click", "Move");
 	    		File_move send_path_move = new File_move();
 	    		send_path_move.setpath(paths);
 	    		send_path_move.setmove(true);
@@ -655,7 +685,7 @@ public class MainActivity
  	    		
 	    		break;	        		
 	    	case R.id.rename:
-	    		 
+	    		googleanalytics_event("CAB options", "button_click", "Rename");
 	    		for(int i=(paths.size()-1);i>=0;i--){
     				
     				String path=paths.get(i);
@@ -671,20 +701,22 @@ public class MainActivity
 
 	    		break;	
 		    	case R.id.compress:
+		    		googleanalytics_event("CAB options", "button_click", "Compress");
 		    		compress_function(paths);
 	    		break;
 	    		
 		    	case R.id.share:
+		    		googleanalytics_event("CAB options", "button_click", "Share");
 		    		share_file(paths);
  	    		break;
 		    	case R.id.newfolder:
-		    			
+		    		googleanalytics_event("CAB options", "button_click", "new folder");
 		    			create_folder(paths.get(0));
 
 		    	break;
 	    		
 	    	case R.id.selectall:
-	    		
+	    		googleanalytics_event("CAB options", "button_click", "Select all");
 	    		if(check_selected){
 	    			
 	    			mActionMode.finish();//removing selected
@@ -729,7 +761,7 @@ public class MainActivity
 				.setPositiveButton("OK",
 				  new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog11,int id) {
-				     
+				    	googleanalytics_event("Create folder", "button_click", "OK");
 				    	 File dir = new File(current_dir.getParent()+"/"+userInput.getText().toString());
 							
 				    	 	try{
@@ -749,7 +781,7 @@ public class MainActivity
 				  new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog,int id) {
 				    	
-				    	 	  
+				    	googleanalytics_event("Create folder", "button_click", "Cancel");
  			              
 					dialog.cancel();
 				    }
@@ -767,6 +799,7 @@ public class MainActivity
 		
 		
 		public void share_file(ArrayList<String> paths){
+ 
 			ArrayList<Uri> imageUris = new ArrayList<Uri>();
     		for(int i=0;i<paths.size();i++){
     			
@@ -782,8 +815,7 @@ public class MainActivity
     		shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
     		shareIntent.setType(type);
     		startActivity(Intent.createChooser(shareIntent, "Share"));
-			
-		}
+ 		}
 		
 		public void compress_function(final ArrayList<String> paths){
 			LayoutInflater li = LayoutInflater.from(MainActivity.this);
@@ -808,7 +840,8 @@ public class MainActivity
 				    public void onClick(DialogInterface dialog11,int id) {
 				    	dialog.setMessage("Compressing please wait.");
     					dialog.show();
-    					
+				    	googleanalytics_event("Compress", "button_click", "Ok");
+
     					Thread thread = new Thread()
     					{
     					    @Override
@@ -902,6 +935,7 @@ public class MainActivity
 				.setPositiveButton("OK",
 				  new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog,int id) {
+				    	googleanalytics_event("Rename file", "button_click", "OK");
 
 				    	  String extension = "";//gettin extension
 				    	  int dotPos = file_name.lastIndexOf(".");
@@ -1048,6 +1082,6 @@ public class MainActivity
 	    super.onStop();
  	    EasyTracker.getInstance(this).activityStop(this);  // Add this method.
 	  }
-
+	  
  } 
  
