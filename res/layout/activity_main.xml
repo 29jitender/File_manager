@@ -29,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Empty"
+            android:layout_gravity="center"
             android:textColor="#fff"
             android:textSize="90dp" />
     </LinearLayout>
