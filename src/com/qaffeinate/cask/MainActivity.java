@@ -48,11 +48,11 @@ public class MainActivity extends SherlockListActivity {
 	ListView listview;
 	String dir_Path;
 	File[] file_list; // array of items
-	FileAdapter Adapter = null;
+	FileAdapter mAdapter = null;
 	Boolean check_selected = false;
 	// navigation
 	ListView list;
-	NavListAdapter adapter;
+	NavListAdapter navAdapter;
 	ArrayList<String> title;
 
 	// /
@@ -91,7 +91,7 @@ public class MainActivity extends SherlockListActivity {
 
 		// Generate title
 
-		adapter = new NavListAdapter(this, title);
+		navAdapter = new NavListAdapter(this, title);
 		// Hide the ActionBar Title
 		// getSupportActionBar().setDisplayShowTitleEnabled(false);
 		// Create the Navigation List in your ActionBar
@@ -129,7 +129,8 @@ public class MainActivity extends SherlockListActivity {
 
 		};
 		// Set the NavListAdapter into the ActionBar Navigation
-		getSupportActionBar().setListNavigationCallbacks(adapter, navlistener);
+		getSupportActionBar().setListNavigationCallbacks(navAdapter,
+				navlistener);
 
 		// //////////
 
@@ -141,34 +142,30 @@ public class MainActivity extends SherlockListActivity {
 
 		listview = getListView();
 
-		try { // this try catch block is to check the exception if we dont have
-				// root permission
-			Adapter = new FileAdapter(this, 1, new ArrayList<FileObject>());
+		try {
+			mAdapter = new FileAdapter(this, 1, new ArrayList<FileObject>());
 			file_list = (new File(dir_Path)).listFiles();
 			for (int i = 0; i < file_list.length; i++)
-				// itrating over the length of file list
-				Adapter.add(new FileObject(file_list[i])); // adding item to
-															// fileobjec
-			Adapter.sort();
+				mAdapter.add(new FileObject(file_list[i]));
+
+			mAdapter.sort();
 
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)
-					// opening a dialog box wiht msg
 					.setTitle("Need root permission to open this")
 					.setNeutralButton("OK",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int button) {
 
-									onBackPressed();// on press ok come back to
-													// home
+									onBackPressed();
 
 								}
 							}).show();
 			e.printStackTrace();
 		}
 
-		listview.setAdapter(Adapter);
+		listview.setAdapter(mAdapter);
 
 		listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
@@ -479,8 +476,8 @@ public class MainActivity extends SherlockListActivity {
 
 	private void onListItemCheck(int position) {
 
-		Adapter.toggleSelection(position);
-		boolean hasCheckedItems = Adapter.getSelectedCount() > 0;
+		mAdapter.toggleSelection(position);
+		boolean hasCheckedItems = mAdapter.getSelectedCount() > 0;
 
 		if (hasCheckedItems && mActionMode == null)
 		// there are some selected items, start the actionMode
@@ -492,7 +489,7 @@ public class MainActivity extends SherlockListActivity {
 			mActionMode.finish();
 
 		if (mActionMode != null)
-			mActionMode.setTitle(String.valueOf(Adapter.getSelectedCount())
+			mActionMode.setTitle(String.valueOf(mAdapter.getSelectedCount())
 					+ " selected");
 
 	}
@@ -566,7 +563,7 @@ public class MainActivity extends SherlockListActivity {
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// inflate contextual menu
 			mode.getMenuInflater().inflate(R.menu.contextual, menu);
-			
+
 			return true;
 		}
 
@@ -578,12 +575,12 @@ public class MainActivity extends SherlockListActivity {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			// retrieve selected items
-			SparseBooleanArray selected = Adapter.getSelectedIds();
+			SparseBooleanArray selected = mAdapter.getSelectedIds();
 			final ArrayList<String> paths = new ArrayList<String>();
 
 			for (int i = 0; i < selected.size(); i++) {
 				if (selected.valueAt(i)) {
-					paths.add(Adapter.getItem(selected.keyAt(i)).getFile()
+					paths.add(mAdapter.getItem(selected.keyAt(i)).getFile()
 							.getAbsolutePath());
 				}
 			}
@@ -1014,7 +1011,7 @@ public class MainActivity extends SherlockListActivity {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			// remove selection
-			Adapter.removeSelection();
+			mAdapter.removeSelection();
 			mActionMode = null;
 		}
 
