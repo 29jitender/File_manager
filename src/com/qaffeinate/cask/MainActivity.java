@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -286,13 +287,19 @@ public class MainActivity extends SherlockListActivity {
 									DeleteRecursive(file);
 
 								}
-
-								sendBroadcast(new Intent(
-										Intent.ACTION_MEDIA_MOUNTED,
-										Uri.parse("file://"
-												+ Environment
-														.getExternalStorageDirectory())));// refreshing
-
+								if (Build.VERSION.SDK_INT < 19) {
+									sendBroadcast(new Intent(
+											Intent.ACTION_MEDIA_MOUNTED,
+											Uri.parse("file://"
+													+ Environment
+															.getExternalStorageDirectory())));// refreshing
+								} else {
+									sendBroadcast(new Intent(
+											Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+											Uri.parse("file://"
+													+ Environment
+															.getExternalStorageDirectory())));
+								}
 								File_move.path_list = null; // removing list
 								File_move.move = false;
 								paste_layout.setVisibility(View.GONE);
@@ -559,7 +566,7 @@ public class MainActivity extends SherlockListActivity {
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// inflate contextual menu
 			mode.getMenuInflater().inflate(R.menu.contextual, menu);
-
+			
 			return true;
 		}
 
@@ -621,11 +628,19 @@ public class MainActivity extends SherlockListActivity {
 
 												}
 
-												sendBroadcast(new Intent(
-														Intent.ACTION_MEDIA_MOUNTED,
-														Uri.parse("file://"
-																+ Environment
-																		.getExternalStorageDirectory())));// refreshing
+												if (Build.VERSION.SDK_INT < 19) {
+													sendBroadcast(new Intent(
+															Intent.ACTION_MEDIA_MOUNTED,
+															Uri.parse("file://"
+																	+ Environment
+																			.getExternalStorageDirectory())));// refreshing
+												} else {
+													sendBroadcast(new Intent(
+															Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+															Uri.parse("file://"
+																	+ Environment
+																			.getExternalStorageDirectory())));
+												}
 												dialog.dismiss();
 
 												refresh_activity();
@@ -847,11 +862,20 @@ public class MainActivity extends SherlockListActivity {
 																	+ ".zip");
 													// obj.zip();
 													if (obj.zip()) {
-														sendBroadcast(new Intent(
-																Intent.ACTION_MEDIA_MOUNTED,
-																Uri.parse("file://"
-																		+ Environment
-																				.getExternalStorageDirectory())));// refreshing
+
+														if (Build.VERSION.SDK_INT < 19) {
+															sendBroadcast(new Intent(
+																	Intent.ACTION_MEDIA_MOUNTED,
+																	Uri.parse("file://"
+																			+ Environment
+																					.getExternalStorageDirectory())));// refreshing
+														} else {
+															sendBroadcast(new Intent(
+																	Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+																	Uri.parse("file://"
+																			+ Environment
+																					.getExternalStorageDirectory())));
+														}
 														dialog.dismiss();
 														refresh_activity();
 													}
@@ -929,11 +953,20 @@ public class MainActivity extends SherlockListActivity {
 												userInput.getText() + ""
 														+ extension);
 										from.renameTo(to);
-										sendBroadcast(new Intent(
-												Intent.ACTION_MEDIA_MOUNTED,
-												Uri.parse("file://"
-														+ Environment
-																.getExternalStorageDirectory())));// refreshing
+
+										if (Build.VERSION.SDK_INT < 19) {
+											sendBroadcast(new Intent(
+													Intent.ACTION_MEDIA_MOUNTED,
+													Uri.parse("file://"
+															+ Environment
+																	.getExternalStorageDirectory())));// refreshing
+										} else {
+											sendBroadcast(new Intent(
+													Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+													Uri.parse("file://"
+															+ Environment
+																	.getExternalStorageDirectory())));
+										}
 										if (last_file) {
 											refresh_activity();
 											// Toast.makeText(MainActivity.this,
@@ -1047,6 +1080,7 @@ public class MainActivity extends SherlockListActivity {
 					MainActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(mainIntent);
+			overridePendingTransition(0, 0);
 		default:
 			break;
 		}

@@ -1,70 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-	  
-	    <group android:id="@+id/group1"
-	        android:title="co">
-	        <item
-	        android:id="@+id/selectall"
-	        android:title="Select All"
-	        android:icon="@drawable/ic_action_select_all"
-	        android:showAsAction="always"
- 	        >
-	    </item>
-	        
-	          <item
-	        android:id="@+id/copy"
-	        android:title="Copy"
-	        android:icon="@drawable/ic_action_copy"
-	        android:showAsAction="always"
-	        
- 	         >
-	    </item>
-	
-	    <item
-	        android:id="@+id/move"
-	        android:title="Move"
-	        android:icon="@drawable/ic_action_split"
-	        android:showAsAction="always"
- 	        >
-	    </item>
-	    
-	    	<item
-	        android:id="@+id/delet"
-	        android:title="Delete"
-	        android:icon="@drawable/ic_action_discard"
-	        android:showAsAction="always"
- 	        >
-	    </item>
-	    
-	    <item
-	        android:id="@+id/rename"
-	        android:title="Rename"
-	        android:icon="@drawable/ic_action_edit"
-	        android:showAsAction="collapseActionView"
- 	        >
-	    </item>
-	    
-	     <item
-	        android:id="@+id/compress"
-	        android:title="Compress"
-	        android:icon="@drawable/ic_action_storage"
-	        android:showAsAction="collapseActionView"
- 	        >
-	    </item>
-	     <item
-	        android:id="@+id/share"
-	        android:title="Share"
-	        android:icon="@drawable/ic_action_share"
-	        android:showAsAction="collapseActionView"
- 	        >
-	    </item>
-	       <item
-	        android:id="@+id/newfolder"
-	        android:title="Create Folder"
-	        android:icon="@drawable/ic_action_collection"
-	        android:showAsAction="collapseActionView"
- 	        >
-	    </item>
- 	    </group>
- 
-</menu> 
+
+    <group
+        android:id="@+id/group1"
+        android:title="co" >
+        <item
+            android:id="@+id/selectall"
+            android:icon="@drawable/ic_action_select_all"
+            android:showAsAction="always"
+            android:title="Select All">
+        </item>
+        <item
+            android:id="@+id/copy"
+            android:icon="@drawable/ic_action_copy"
+            android:showAsAction="always"
+            android:title="Copy">
+        </item>
+        <item
+            android:id="@+id/move"
+            android:icon="@drawable/ic_action_split"
+            android:showAsAction="always"
+            android:title="Move">
+        </item>
+        <item
+            android:id="@+id/delet"
+            android:icon="@drawable/ic_action_discard"
+            android:showAsAction="always"
+            android:title="Delete">
+        </item>
+        <item
+            android:id="@+id/rename"
+            android:icon="@drawable/ic_action_edit"
+            android:showAsAction="collapseActionView"
+            android:title="Rename">
+        </item>
+        <item
+            android:id="@+id/compress"
+            android:icon="@drawable/ic_action_storage"
+            android:showAsAction="collapseActionView"
+            android:title="Compress">
+        </item>
+        <item
+            android:id="@+id/share"
+            android:icon="@drawable/ic_action_share"
+            android:showAsAction="collapseActionView"
+            android:title="Share">
+        </item>
+        <item
+            android:id="@+id/newfolder"
+            android:icon="@drawable/ic_action_collection"
+            android:showAsAction="collapseActionView"
+            android:title="Create Folder">
+        </item>
+    </group>
+
+</menu>
